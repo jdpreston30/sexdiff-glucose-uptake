@@ -1,0 +1,23 @@
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# OS
+.DS_Store
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Build outputs
+*.pdf
+*.png
+*.html

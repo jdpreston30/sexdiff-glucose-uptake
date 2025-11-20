@@ -1,0 +1,33 @@
+Type: Project
+Title: 
+Authors@R: person("Joshua", "Preston", email = "joshua.preston@emory.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-9834-3017"))
+Description: Analysis pipeline for reproducing the results
+    submitted to AJP-EM, Preston and Adediji et al. 2025.
+License: MIT + file LICENSE
+URL: https://github.com/jdpreston30/sexdiff-glucose-uptake
+Depends: 
+    R (>= 4.5.1)
+Imports:
+    ARTool,
+    ez,
+    readxl,
+    cli,
+    readxl,
+    lme4,
+    broom,
+    jtools,
+    dplyr,
+    tibble,
+    tidyr,
+    purrr,
+    devtools,
+    readr,
+    stats,
+    multcomp
+Additional_repositories: 
+    https://bioconductor.org/packages/release/bioc
+Bioconductor:
+    multtest
+Config/renv/snapshot/type: explicit
+Encoding: UTF-8
+RoxygenNote: 7.3.3
