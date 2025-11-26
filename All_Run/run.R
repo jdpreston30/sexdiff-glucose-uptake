@@ -4,4 +4,6 @@ config <- load_dynamic_config(computer = "auto", config_path = "All_run/config_d
 source("R/Scripts/00a_environment_setup.R")
 source("R/Scripts/00b_setup.R")
 source("R/Scripts/00c_import.R")
+source("R/Scripts/01_phenotypic_data.R")
+source("R/Scripts/99_render_figures.R")
 }

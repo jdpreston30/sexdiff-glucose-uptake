@@ -39,5 +39,7 @@ if (!is.null(config$analysis$datatable_options)) {
   .datatable.aware = config$analysis$datatable_options$aware
 }
 #+ 0b.7: Set up package conflict preferences
-# conflicts_prefer(dplyr::filter)
+conflicts_prefer(dplyr::select)
+conflicts_prefer(dplyr::filter)
+conflicts_prefer(base::setdiff)
 cat("✅ Configuration and environment setup complete!\n")
