@@ -60,7 +60,8 @@ p1B <- plot_anova_barplot(
   factor1 = "sex",
   factor2 = "diet",
   y_label = "Food Efficiency (g/kcal)",
-  y_limits = c(0, 0.02)
+  y_limits = c(0, 0.02),
+  y_breaks = seq(0, 0.02, 0.005)
 )
 #- 1.3.3: Plot Lean Mass
 p1C <- plot_anova_barplot(
@@ -70,7 +71,8 @@ p1C <- plot_anova_barplot(
   factor1 = "sex",
   factor2 = "diet",
   y_label = "Lean Mass (g)",
-  y_limits = c(0, 30)
+  y_limits = c(0, 30),
+  y_breaks = seq(0, 30, 5)
 )
 #- 1.3.4: Plot Fat Mass
 p1D <- plot_anova_barplot(
@@ -80,5 +82,6 @@ p1D <- plot_anova_barplot(
   factor1 = "sex",
   factor2 = "diet",
   y_label = "Fat Mass (g)",
-  y_limits = c(0, 15)
+  y_limits = c(0, 12),
+  y_breaks = seq(0, 12, 3)
 )

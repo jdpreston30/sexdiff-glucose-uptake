@@ -1,24 +1,26 @@
-plot_rm_bodyweight <- function(data, lmm_result, 
-                               id_col = "ID", 
-                               time_col = "time", 
-                               value_col = "BW",
-                               sex_col = "sex",
-                               diet_col = "diet") {
-  #' Plot Repeated Measures Body Weight Data
+plot_rm_ogtt <- function(data, rmanova_result, 
+                         id_col = "ID", 
+                         time_col = "time", 
+                         value_col = "OGTT_BG",
+                         sex_col = "sex",
+                         diet_col = "diet",
+                         plot_title = NULL) {
+  #' Plot Repeated Measures OGTT Data
   #'
   #' Creates a publication-ready plot with specific formatting:
   #' - Males: solid lines, Females: dotted lines
   #' - Male HF: filled black squares, Male LF: white squares with black outline
   #' - Female LF: white triangles, Female HF: black triangles
-  #' - P-value in top right corner
+  #' - P-values in top right corner
   #'
-  #' @param data Data frame with body weight data in long format
-  #' @param lmm_result Result object from run_lmm()
+  #' @param data Data frame with OGTT data in long format
+  #' @param rmanova_result Result object from run_rm_anova()
   #' @param id_col Name of ID column
   #' @param time_col Name of time column
-  #' @param value_col Name of value column (BW)
+  #' @param value_col Name of value column (OGTT_BG)
   #' @param sex_col Name of sex column
   #' @param diet_col Name of diet column
+  #' @param plot_title Optional title for the plot (size 14, Arial bold, centered)
   #' @return A ggplot object
   
   library(ggplot2)
@@ -28,28 +30,54 @@ plot_rm_bodyweight <- function(data, lmm_result,
   summary_data <- data %>%
     group_by(!!sym(time_col), !!sym(sex_col), !!sym(diet_col)) %>%
     summarise(
-      mean_bw = mean(!!sym(value_col), na.rm = TRUE),
-      se_bw = sd(!!sym(value_col), na.rm = TRUE) / sqrt(n()),
+      mean_bg = mean(!!sym(value_col), na.rm = TRUE),
+      se_bg = sd(!!sym(value_col), na.rm = TRUE) / sqrt(n()),
       .groups = "drop"
     ) %>%
     mutate(
       group = paste(!!sym(sex_col), !!sym(diet_col), sep = "_")
     )
   
-  # Extract p-value from LMM result
-  p_value <- lmm_result$anova["time:sex:diet", "Pr(>F)"]
-  p_text <- if (p_value < 0.001) {
-    "Time \u00D7 Sex \u00D7 Diet: p < 0.001"
+  # Convert time to numeric for plotting
+  summary_data[[time_col]] <- as.numeric(as.character(summary_data[[time_col]]))
+  
+  # Extract p-values from RM-ANOVA result
+  anova_table <- rmanova_result$anova_table
+  
+  # Sex × Diet p-value
+  sex_diet_p <- anova_table$p[anova_table$Effect == "sex:diet"]
+  sex_diet_text <- if (sex_diet_p < 0.001) {
+    "Sex \u00D7 Diet: p < 0.001"
   } else {
-    paste0("Time \u00D7 Sex \u00D7 Diet: p = ", round(p_value, 4))
+    paste0("Sex \u00D7 Diet: p = ", sprintf("%.4f", sex_diet_p))
   }
+  
+  # Diet × Time p-value (use corrected if sphericity violated)
+  diet_time_row <- anova_table$Effect == "diet:time"
+  
+  # Check if sphericity corrections exist
+  if (!is.null(rmanova_result$sphericity) && "diet:time" %in% rmanova_result$sphericity$Effect) {
+    # Use Greenhouse-Geisser corrected p-value
+    diet_time_p <- rmanova_result$sphericity$`p[GG]`[rmanova_result$sphericity$Effect == "diet:time"]
+  } else {
+    diet_time_p <- anova_table$p[diet_time_row]
+  }
+  
+  diet_time_text <- if (diet_time_p < 0.001) {
+    "Time \u00D7 Diet: p < 0.001"
+  } else {
+    paste0("Time \u00D7 Diet: p = ", sprintf("%.4f", diet_time_p))
+  }
+  
+  # Combine p-value text
+  p_text <- paste(sex_diet_text, diet_time_text, sep = "\n")
   
   # Reorder factor levels for legend order: M_HF, M_LF, F_HF, F_LF
   summary_data$group <- factor(summary_data$group, 
                                 levels = c("M_HF", "M_LF", "F_HF", "F_LF"))
   
   # Create the plot
-  p <- ggplot(summary_data, aes(x = !!sym(time_col), y = mean_bw, 
+  p <- ggplot(summary_data, aes(x = !!sym(time_col), y = mean_bg, 
                                  group = group,
                                  shape = group,
                                  fill = group,
@@ -90,24 +118,25 @@ plot_rm_bodyweight <- function(data, lmm_result,
     ) +
     # Scales
     scale_x_continuous(
-      breaks = 0:8,
-      limits = c(0, 8),
+      breaks = c(0, 15, 30, 45),
+      limits = c(0, 45),
       expand = expansion(mult = c(0.05, 0.05), add = 0)
     ) +
     scale_y_continuous(
-      breaks = seq(15, 40, 5),
-      limits = c(15, 40),
+      breaks = seq(50, 350, 50),
+      limits = c(50, 350),
       expand = expansion(mult = c(0, 0.05), add = 0)
     ) +
     # Labels
     labs(
-      x = "Time (weeks)",
-      y = "Body Weight (g)",
+      x = "Time (minutes)",
+      y = "Circulating Glucose (mg/dL)",
+      title = plot_title,
       shape = NULL,
       fill = NULL
     ) +
     # Add p-value annotation
-    annotate("text", x = 8, y = 39.5, label = p_text,
+    annotate("text", x = 45, y = 348, label = p_text,
              size = 8/.pt, family = "Arial", fontface = "plain",
              hjust = 1, vjust = 1) +
     # Theme
@@ -129,7 +158,9 @@ plot_rm_bodyweight <- function(data, lmm_result,
       axis.title.y = element_text(margin = margin(r = 10)),
       axis.ticks.length = unit(0.15, "cm"),
       axis.line = element_line(color = "black", linewidth = 0.8),
-      axis.ticks = element_line(color = "black", linewidth = 0.8)
+      axis.ticks = element_line(color = "black", linewidth = 0.8),
+      plot.title = element_text(size = 14, face = "bold", family = "Arial", 
+                                hjust = 0.5, color = "black")
     ) +
     guides(
       linetype = "none",  # Hide linetype legend (redundant with shape/fill)

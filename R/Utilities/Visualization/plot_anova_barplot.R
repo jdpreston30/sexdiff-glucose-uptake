@@ -3,7 +3,8 @@ plot_anova_barplot <- function(data, anova_result,
                                factor1 = "sex",
                                factor2 = "diet",
                                y_label,
-                               y_limits) {
+                               y_limits,
+                               y_breaks = NULL) {
   #' Plot Two-Way ANOVA Results as Bar Plot
   #'
   #' Creates a bar plot with:
@@ -53,7 +54,7 @@ plot_anova_barplot <- function(data, anova_result,
   p_text <- paste0(
     "Sex: ", format_p(p_sex), "\n",
     "Diet: ", format_p(p_diet), "\n",
-    "Sex \u00D7 Diet: ", format_p(p_interaction)
+    "Int.: ", format_p(p_interaction)
   )
   
   # Add CLD letters if interaction is significant
@@ -91,6 +92,7 @@ plot_anova_barplot <- function(data, anova_result,
     ) +
     scale_y_continuous(
       limits = y_limits,
+      breaks = y_breaks,
       expand = expansion(mult = c(0, 0.05), add = 0)
     ) +
     labs(
@@ -98,8 +100,11 @@ plot_anova_barplot <- function(data, anova_result,
       y = y_label,
       fill = NULL
     ) +
+    coord_cartesian(clip = "off") +
     theme_classic(base_size = 12, base_family = "Arial") +
     theme(
+      plot.background = element_rect(fill = "transparent", color = NA),
+      panel.background = element_rect(fill = "transparent", color = NA),
       legend.position = c(1, 1),
       legend.justification = c(1, 1),
       legend.direction = "horizontal",
@@ -107,11 +112,12 @@ plot_anova_barplot <- function(data, anova_result,
       legend.key.size = unit(0.3, "cm"),
       legend.background = element_rect(fill = "transparent", color = NA),
       legend.key = element_rect(fill = "transparent", color = NA),
-      legend.spacing.x = unit(0.1, "cm"),
+      legend.key.width = unit(0.3, "cm"),
+      legend.spacing.x = unit(-0.05, "cm"),
       legend.margin = margin(b = 0),
       axis.text.x = element_text(face = "bold", color = "black"),
       axis.text.y = element_text(face = "bold", color = "black"),
-      axis.title.x = element_text(face = "bold", color = "transparent"),
+      axis.title.x = element_text(face = "bold", color = "black"),
       axis.title.y = element_text(face = "bold", color = "black", margin = margin(r = 10)),
       axis.ticks.length = unit(0.15, "cm"),
       axis.line = element_line(color = "black", linewidth = 0.8),
@@ -121,6 +127,7 @@ plot_anova_barplot <- function(data, anova_result,
   # Add CLD letters if present
   if (!all(is.na(summary_data$letter))) {
     # Calculate letter position (above error bar)
+    # Use relative offset based on y-axis range
     letter_height <- (y_limits[2] - y_limits[1]) * 0.05
     summary_data <- summary_data %>%
       mutate(letter_y = mean_val + se_val + letter_height)
@@ -136,15 +143,15 @@ plot_anova_barplot <- function(data, anova_result,
   }
   
   # Add p-value annotation
-  # Position below legend with right justification
+  # Position right-aligned with legend's right edge
   p <- p + annotate("text", 
-                    x = 2.02, 
-                    y = y_limits[2] * 0.92, 
+                    x = 1.865, 
+                    y = y_limits[2] * 0.95, 
                     label = p_text,
                     size = 8/.pt,  # Same size as legend
                     family = "Arial", 
                     fontface = "plain",
-                    hjust = 1, 
+                    hjust = 0, 
                     vjust = 1,
                     lineheight = 0.85)
   
