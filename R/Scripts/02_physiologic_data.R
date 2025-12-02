@@ -22,6 +22,5 @@ OGTT_RMANOVA <- run_rm_anova(
 #- 2.5.1: Plot RM OGTT Blood Glucose
 p2a <- plot_rm_ogtt(
   data = OGTT,
-  rmanova_result = OGTT_RMANOVA,
-  plot_title = "Oral Glucose Tolerance Test"
+  rmanova_result = OGTT_RMANOVA
 )

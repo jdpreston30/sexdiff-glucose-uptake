@@ -72,9 +72,9 @@ plot_rm_ogtt <- function(data, rmanova_result,
   # Combine p-value text
   p_text <- paste(sex_diet_text, diet_time_text, sep = "\n")
   
-  # Reorder factor levels for legend order: M_HF, M_LF, F_HF, F_LF
+  # Reorder factor levels for legend order: M_LF, M_HF, F_LF, F_HF
   summary_data$group <- factor(summary_data$group, 
-                                levels = c("M_HF", "M_LF", "F_HF", "F_LF"))
+                                levels = c("M_LF", "M_HF", "F_LF", "F_HF"))
   
   # Create the plot
   p <- ggplot(summary_data, aes(x = !!sym(time_col), y = mean_bg, 
@@ -98,9 +98,9 @@ plot_rm_ogtt <- function(data, rmanova_result,
         "F_HF" = 24,   # filled triangle (female HF)
         "F_LF" = 24    # triangle (female LF)
       ),
-      labels = c("M_HF" = "Male HF", "M_LF" = "Male LF", 
-                 "F_HF" = "Female HF", "F_LF" = "Female LF"),
-      breaks = c("M_HF", "M_LF", "F_HF", "F_LF")
+      labels = c("M_LF" = "Male LF", "F_LF" = "Female LF",
+                 "M_HF" = "Male HF", "F_HF" = "Female HF"),
+      breaks = c("M_LF", "F_LF", "M_HF", "F_HF")
     ) +
     scale_fill_manual(
       values = c(
@@ -109,9 +109,9 @@ plot_rm_ogtt <- function(data, rmanova_result,
         "F_HF" = "black",     # filled black
         "F_LF" = "white"      # white
       ),
-      labels = c("M_HF" = "Male HF", "M_LF" = "Male LF", 
-                 "F_HF" = "Female HF", "F_LF" = "Female LF"),
-      breaks = c("M_HF", "M_LF", "F_HF", "F_LF")
+      labels = c("M_LF" = "Male LF", "F_LF" = "Female LF",
+                 "M_HF" = "Male HF", "F_HF" = "Female HF"),
+      breaks = c("M_LF", "F_LF", "M_HF", "F_HF")
     ) +
     scale_linetype_manual(
       values = c("M" = "solid", "F" = "twodash")
@@ -130,21 +130,29 @@ plot_rm_ogtt <- function(data, rmanova_result,
     # Labels
     labs(
       x = "Time (minutes)",
-      y = "Circulating Glucose (mg/dL)",
+      y = "Glucose (mg/dL)",
       title = plot_title,
       shape = NULL,
       fill = NULL
     ) +
-    # Add p-value annotation
-    annotate("text", x = 45, y = 348, label = p_text,
-             size = 8/.pt, family = "Arial", fontface = "plain",
-             hjust = 1, vjust = 1) +
+    # Add p-value annotation using normalized coordinates
+    annotation_custom(
+      grob = grid::textGrob(
+        label = p_text,
+        x = 0.971, y = 0.993,
+        hjust = 1, vjust = 1,
+        gp = grid::gpar(fontsize = 8, fontfamily = "Arial", fontface = "plain", lineheight = 1.17)
+      ),
+      xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf
+    ) +
+    # Allow annotations outside plot area
+    coord_cartesian(clip = "off") +
     # Theme
     theme_classic(base_size = 12, base_family = "Arial") +
     theme(
       plot.background = element_rect(fill = "transparent", color = NA),
       panel.background = element_rect(fill = "transparent", color = NA),
-      legend.position = c(-0.01, 1),
+      legend.position = c(-0.01, 1.058),
       legend.justification = c(0, 1),
       legend.text = element_text(size = 8, face = "plain"),
       legend.background = element_rect(fill = "transparent", color = NA),
@@ -155,7 +163,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
       legend.key.height = unit(0.4, "cm"),
       axis.text = element_text(face = "bold", color = "black"),
       axis.title = element_text(face = "bold", color = "black"),
-      axis.title.y = element_text(margin = margin(r = 10)),
+      axis.title.y = element_text(margin = margin(r = 5)),
       axis.ticks.length = unit(0.15, "cm"),
       axis.line = element_line(color = "black", linewidth = 0.8),
       axis.ticks = element_line(color = "black", linewidth = 0.8),
@@ -164,8 +172,10 @@ plot_rm_ogtt <- function(data, rmanova_result,
     ) +
     guides(
       linetype = "none",  # Hide linetype legend (redundant with shape/fill)
-      shape = guide_legend(override.aes = list(linetype = c("solid", "solid", "twodash", "twodash"))),
-      fill = guide_legend(override.aes = list(linetype = c("solid", "solid", "twodash", "twodash")))
+      shape = guide_legend(ncol = 2, byrow = TRUE, 
+                          override.aes = list(linetype = c("solid", "twodash", "solid", "twodash"))),
+      fill = guide_legend(ncol = 2, byrow = TRUE,
+                         override.aes = list(linetype = c("solid", "twodash", "solid", "twodash")))
     )
   
   return(p)

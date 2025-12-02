@@ -25,7 +25,7 @@ fig1 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
 #- 5.2.2: Render Figure 2
 fig2 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   # 2A
-  draw_plot(p2a, x = 0.57, y = 6.15-0.25, width = 4, height = 3) +
+  draw_plot(p2a, x = 0.778, y = 7.41, width = 3.792, height = 2.4) +
   # Labels
   figure_labels(list(
     A = c(0.74, 10.00),
@@ -34,6 +34,10 @@ fig2 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
     D = c(4.87, 7.42),
     "Figure 2" = c(0.49, 10.43)
   ))
+  print_to_png(fig2 + grdgd(),
+    "Fig2.png",
+    width = 8.5, height = 11, dpi = 600, output_dir = "Outputs/Figures"
+  )
 #+ 5.6: Print All Main Figures
 #- 5.7.1: Figure 1
 print_to_png(fig1+grdgd(),
