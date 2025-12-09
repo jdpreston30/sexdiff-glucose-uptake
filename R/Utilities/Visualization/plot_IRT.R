@@ -49,7 +49,7 @@ plot_IRT <- function(data, rmanova_result,
   sex_diet_text <- if (sex_diet_p < 0.001) {
     "Sex \u00D7 Diet: p < 0.001"
   } else {
-    paste0("Sex \u00D7 Diet: p = ", sprintf("%.4f", sex_diet_p))
+    paste0("Sex \u00D7 Diet: p = ", sprintf("%.3f", sex_diet_p))
   }
   
   # Reorder factor levels for legend order

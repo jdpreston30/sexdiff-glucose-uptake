@@ -47,8 +47,7 @@ plot_anova_barplot <- function(data, anova_result,
   format_p <- function(p) {
     if (length(p) == 0 || is.na(p)) return("p = NA")
     if (p < 0.001) return("p < 0.001")
-    if (p < 0.01) return(paste0("p = ", sprintf("%.3f", p)))
-    return(paste0("p = ", sprintf("%.2f", p)))
+    return(paste0("p = ", sprintf("%.3f", p)))
   }
   
   p_text <- paste0(
