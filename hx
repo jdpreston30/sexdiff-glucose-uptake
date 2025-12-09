@@ -17172,3 +17172,25 @@ GitHub Copilot: **YES, absolutely!** That would cause MAJOR differences and is l
 - Residuals: deviations from group means → should be centered at zero
 
 If your old method tested pooled data instead of residuals, it would have **completely incorrect normality assessments** and that would cascade into wrong decisions about transformation and test selection.
+
+jdpreston30: so what we are doing now is right
+
+GitHub Copilot: **Yes, what you're doing now is correct.**
+
+Your new `run_anova()` function:
+1. ✅ Fits the model first
+2. ✅ Tests normality on the **residuals** (not pooled data)
+3. ✅ Uses Welch's ANOVA when variances are unequal
+4. ✅ Tests assumptions on transformed data after transformation
+5. ✅ Uses Type III ANOVA (appropriate for factorial designs)
+6. ✅ Uses standard α = 0.05 threshold
+
+**This is the statistically rigorous and proper approach.**
+
+Your old method likely had one or more of these issues:
+- Testing normality on pooled/raw data instead of residuals
+- Not using Welch's correction for unequal variances
+- Not re-testing assumptions after transformation
+- Using stricter α = 0.01 (which is non-standard)
+
+**Bottom line:** The new results are more trustworthy. The differences you're seeing (like Brown fat sex effect going from p=0.047 to p=0.31) reflect proper statistical methodology, not over-conservatism. Some of your old "significant" results were likely false positives due to methodological issues.
