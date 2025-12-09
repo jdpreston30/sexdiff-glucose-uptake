@@ -4,36 +4,55 @@
 aligned_plots <- align_plots(p1A, p1B, p1C, p1D, align = "hv", axis = "tblr")
 #- 4.1.2: Render Figure 1
 fig1 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
-  draw_plot(aligned_plots[[1]], x = 0.668, y = 7.11, width = 7.153, height = 2.7) +
-  draw_plot(aligned_plots[[2]], x = 0.668, y = 4.035, width = 3.5, height = 2.7) +
-  draw_plot(aligned_plots[[3]], x = 4.46, y = 4.035, width = 3.361, height = 2.7) +
-  draw_plot(aligned_plots[[4]], x = 0.668, y = 1.26, width = 3.5, height = 2.4) +
+  draw_plot(aligned_plots[[1]], x = 0.668, y = 7.2525, width = 7.153, height = 2.7) +
+  draw_plot(aligned_plots[[2]], x = 0.668, y = 4.2275, width = 3.5, height = 2.7) +
+  draw_plot(aligned_plots[[3]], x = 4.46, y = 4.2275, width = 3.361, height = 2.7) +
+  draw_plot(aligned_plots[[4]], x = 0.668, y = 1.5025, width = 3.5, height = 2.4) +
   # Labels
   figure_labels(list(
-    A = c(0.92, 10.00),
-    B = c(0.74, 6.925),
-    C = c(4.392, 6.925),
-    D = c(0.74, 3.85),
+    A = c(0.92, 10.12),
+    B = c(0.74, 6.975),
+    C = c(4.392, 6.975),
+    D = c(0.74, 4.07),
     "Figure 1" = c(0.49, 10.43)
   ))
 #+ 4.2: Figure 2
 fig2 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   # 2A
-  draw_plot(p2a, x = 0.668, y = 7.11, width = 3.5, height = 2.7) +
-  draw_plot(p2b, x = 4.32, y = 7.11, width = 3.5, height = 2.7) +
-  draw_plot(p2c, x = 0.668, y = 4.035, width = 3.5, height = 2.7) +
-  draw_plot(p2d, x = 4.32+.14, y = 4.035, width = 3.361, height = 2.7) +
-  draw_plot(p2e, x = 0.668, y = 1.26, width = 3.5, height = 2.4) +
+  draw_plot(p2a, x = 0.668, y = 7.2525, width = 3.5, height = 2.7) +
+  draw_plot(p2b, x = 4.32, y = 7.2525, width = 3.5, height = 2.7) +
+  draw_plot(p2c, x = 0.668, y = 4.2275, width = 3.5, height = 2.7) +
+  draw_plot(p2d, x = 4.32+.14, y = 4.2275, width = 3.361, height = 2.7) +
+  draw_plot(p2e, x = 0.668, y = 1.5025, width = 3.5, height = 2.4) +
   # Labels
   figure_labels(list(
-    A = c(0.74, 10.00),
-    B = c(4.392, 10.00),
-    C = c(0.74, 6.925),
-    D = c(4.392, 6.925),
-    E = c(0.74, 3.85),
+    A = c(0.74, 10.12),
+    B = c(4.392, 10.12),
+    C = c(0.74, 7.095),
+    D = c(4.392, 7.095),
+    E = c(0.74, 4.07),
     "Figure 2" = c(0.49, 10.43)
   ))
 #+ 4.3: Figure 3
+fig3 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
+  #- Row 1
+  draw_plot(p3a, x = 0.668, y = 6.2525, width = 4.75, height = 4) +
+  draw_plot(p3b, x = 5.32, y = 6.2525, width = 2.5, height = 4) +
+  #- Row 2
+  draw_plot(p3c, x = 0.668, y = 2.8675, width = 4.75, height = 4) +
+  draw_plot(p3d, x = 5.32, y = 2.8675, width = 2.5, height = 4) +
+  #- Row 3
+  draw_plot(p3e, x = 0.668, y = -0.5175, width = 4.75, height = 4) +
+  draw_grob(make_legend_gu(), x = 5.92, y = 0.8175, width = 1.8, height = 2.18) +
+  # Labels
+  figure_labels(list(
+    A = c(0.74, 10.12),
+    B = c(5.392, 10.12),
+    C = c(0.74, 6.735),
+    D = c(5.392, 6.735),
+    E = c(0.74, 3.35),
+    "Figure 3" = c(0.49, 10.43)
+  ))
 #+ 4.4: Figure 4
 #- 4.4.1: Read in existing PNG (BioRender figure)
 fig4_img <- png::readPNG("Outputs/Figures/raw/fig3_raw.png")
@@ -61,7 +80,7 @@ fig2_tiff <- tiff::readTIFF("Outputs/Figures/Fig2.tiff", native = FALSE)
 fig3_tiff <- tiff::readTIFF("Outputs/Figures/Fig3.tiff", native = FALSE)
 fig4_tiff <- tiff::readTIFF("Outputs/Figures/Fig4.tiff", native = FALSE)
 #- 5.6.2: Create PDF with all figures (one per page, no downsizing)
-pdf("Outputs/Figures/All_Figures.pdf", width = 8.5, height = 11)
+pdf("Outputs/Figures/Figs1-4.pdf", width = 8.5, height = 11)
 # Figure 1
 grid::grid.newpage()
 grid::grid.raster(fig1_tiff, interpolate = TRUE)

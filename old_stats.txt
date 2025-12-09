@@ -1,0 +1,40 @@
+Gonadal
+Sex: p < 0.001
+Diet: p = 0.032
+Interaction: p = 0.94
+
+RP
+Sex: p = 0.009
+Diet: p = 0.001
+Interaction: p = 0.70
+
+SQ
+Sex: p = 0.006
+Diet: p < 0.001
+Interaction: p = 0.52
+
+Brown Fat
+Sex: p = 0.047
+Diet: p = 0.16
+Interaction: p = 0.63
+
+EDL
+Sex: p = 0.76
+Diet: p = 0.85
+Interaction: p = 0.56
+
+Gastroc
+Sex: p = 0.29
+Diet: p = 0.56
+Interaction: p = 0.71
+
+Soleus
+Sex: p = 0.64
+Diet: p = 0.009
+Interaction: p = 0.66
+
+Cardiac/Heart
+Sex: p = 0.096
+Diet: p < 0.001
+Interaction: p = 0.38
+
