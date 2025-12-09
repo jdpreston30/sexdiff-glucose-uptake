@@ -1,0 +1,54 @@
+=======================================================
+  Glucose Uptake ANOVA Results (In-Vivo Only)
+=======================================================
+
+Gonadal 
+------- 
+Sex:         p = 0.0140
+Diet:        p = 0.1376
+Interaction: p = 0.9359
+
+Subcutaneous 
+------------ 
+Sex:         p = 0.1676
+Diet:        p = 0.0005
+Interaction: p = 0.7478
+
+Retroperitoneal 
+--------------- 
+Sex:         p = 0.0358
+Diet:        p = 0.0335
+Interaction: p = 0.6997
+
+Brown 
+----- 
+Sex:         p = 0.3107
+Diet:        p = 0.1836
+Interaction: p = 0.6342
+
+EDL 
+--- 
+Sex:         p = 0.5280
+Diet:        p = 0.5876
+Interaction: p = 0.5647
+
+Gastrocnemius 
+------------- 
+Sex:         p = 0.3554
+Diet:        p = 0.6746
+Interaction: p = 0.5518
+
+Soleus 
+------ 
+Sex:         p = 0.5259
+Diet:        p = 0.1117
+Interaction: p = 0.6650
+
+Heart 
+----- 
+Sex:         p = 0.4225
+Diet:        p = 0.0049
+Interaction: p = 0.8672
+
+=======================================================
+Results saved to: GU_ANOVA_Results.txt 

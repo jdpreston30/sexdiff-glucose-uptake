@@ -16,9 +16,7 @@ Imports:
     here,
     cowplot,
     readxl,
-    jsonlite,
     rstatix,
-    rlang,
     multcompView,
     stringr,
     lme4,
@@ -37,6 +35,11 @@ Imports:
     png,
     stats,
     multcomp
+Suggests:
+    jsonlite,
+    rlang,
+    languageserver,
+    httpgd
 Additional_repositories: 
     https://bioconductor.org/packages/release/bioc
 Bioconductor:
