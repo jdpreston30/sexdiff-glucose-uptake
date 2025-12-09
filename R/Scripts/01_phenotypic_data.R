@@ -21,26 +21,11 @@ BW_LMM <- run_lmm(
 )
 #+ 1.2: Food Efficiency, LM, FM ANOVA
 #- 1.2.1: Food Efficiency ANOVA
-FE_ANOVA <- run_anova(
-  data = phenotypic_physiologic,
-  response = "food_efficiency",
-  factor1 = "sex",
-  factor2 = "diet"
-)
+FE_ANOVA <- run_anova(data = phenotypic_physiologic, response = "food_efficiency")
 #- 1.2.2: Lean Mass ANOVA
-LM_ANOVA <- run_anova(
-  data = phenotypic_physiologic,
-  response = "LM",
-  factor1 = "sex",
-  factor2 = "diet"
-)
+LM_ANOVA <- run_anova( data = phenotypic_physiologic, response = "LM")
 #- 1.2.3: Fat Mass ANOVA
-FM_ANOVA <- run_anova(
-  data = phenotypic_physiologic,
-  response = "FM",
-  factor1 = "sex",
-  factor2 = "diet"
-)
+FM_ANOVA <- run_anova(data = phenotypic_physiologic, response = "FM")
 #+ 1.3: Plot all phenotypic data
 #- 1.3.1: Plot RM BW
 p1A <- plot_rm_bodyweight(
@@ -57,8 +42,6 @@ p1B <- plot_anova_barplot(
   data = phenotypic_physiologic,
   anova_result = FE_ANOVA,
   response = "food_efficiency",
-  factor1 = "sex",
-  factor2 = "diet",
   y_label = "Food Efficiency (g/kcal)",
   y_limits = c(0, 0.02),
   y_breaks = seq(0, 0.02, 0.005)
@@ -68,8 +51,6 @@ p1C <- plot_anova_barplot(
   data = phenotypic_physiologic,
   anova_result = LM_ANOVA,
   response = "LM",
-  factor1 = "sex",
-  factor2 = "diet",
   y_label = "Lean Mass (g)",
   y_limits = c(0, 30),
   y_breaks = seq(0, 30, 5)
@@ -79,8 +60,6 @@ p1D <- plot_anova_barplot(
   data = phenotypic_physiologic,
   anova_result = FM_ANOVA,
   response = "FM",
-  factor1 = "sex",
-  factor2 = "diet",
   y_label = "Fat Mass (g)",
   y_limits = c(0, 12),
   y_breaks = seq(0, 12, 3)

@@ -74,8 +74,8 @@ plot_anova_barplot <- function(data, anova_result,
   summary_data <- summary_data %>%
     mutate(
       !!sym(factor1) := factor(!!sym(factor1), 
-                               levels = c("M", "F"), 
-                               labels = c("Male", "Female")),
+                               levels = c("F", "M"), 
+                               labels = c("Female", "Male")),
       !!sym(factor2) := factor(!!sym(factor2),
                                levels = c("LF", "HF"))
     )
@@ -105,8 +105,8 @@ plot_anova_barplot <- function(data, anova_result,
     theme(
       plot.background = element_rect(fill = "transparent", color = NA),
       panel.background = element_rect(fill = "transparent", color = NA),
-      legend.position = c(1, 1),
-      legend.justification = c(1, 1),
+      legend.position = c(0.044, 1),
+      legend.justification = c(0, 1),
       legend.direction = "horizontal",
       legend.text = element_text(size = 8, face = "plain"),
       legend.key.size = unit(0.3, "cm"),
@@ -117,8 +117,8 @@ plot_anova_barplot <- function(data, anova_result,
       legend.margin = margin(b = 0),
       axis.text.x = element_text(face = "bold", color = "black"),
       axis.text.y = element_text(face = "bold", color = "black"),
-      axis.title.x = element_text(face = "bold", color = "black"),
-      axis.title.y = element_text(face = "bold", color = "black", margin = margin(r = 10)),
+      axis.title.x = element_text(size = 11, face = "bold", color = "black"),
+      axis.title.y = element_text(size = 11, face = "bold", color = "black", margin = margin(r = 12)),
       axis.ticks.length = unit(0.15, "cm"),
       axis.line = element_line(color = "black", linewidth = 0.8),
       axis.ticks = element_line(color = "black", linewidth = 0.8)
@@ -143,9 +143,9 @@ plot_anova_barplot <- function(data, anova_result,
   }
   
   # Add p-value annotation
-  # Position right-aligned with legend's right edge
+  # Position left-aligned to match legend at x=0.044 (converted to data coordinates)
   p <- p + annotate("text", 
-                    x = 1.865, 
+                    x = 0.49, 
                     y = y_limits[2] * 0.95, 
                     label = p_text,
                     size = 8/.pt,  # Same size as legend

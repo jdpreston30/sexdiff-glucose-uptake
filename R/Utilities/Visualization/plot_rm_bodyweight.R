@@ -72,7 +72,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
       ),
       labels = c("M_LF" = "Male LF", "M_HF" = "Male HF",
                  "F_LF" = "Female LF", "F_HF" = "Female HF"),
-      breaks = c("M_LF", "M_HF", "F_LF", "F_HF")
+      breaks = c("F_LF", "F_HF", "M_LF", "M_HF")
     ) +
     scale_fill_manual(
       values = c(
@@ -83,7 +83,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
       ),
       labels = c("M_LF" = "Male LF", "M_HF" = "Male HF",
                  "F_LF" = "Female LF", "F_HF" = "Female HF"),
-      breaks = c("M_LF", "M_HF", "F_LF", "F_HF")
+      breaks = c("F_LF", "F_HF", "M_LF", "M_HF")
     ) +
     scale_linetype_manual(
       values = c("M" = "solid", "F" = "twodash")
@@ -123,7 +123,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
     theme(
       plot.background = element_rect(fill = "transparent", color = NA),
       panel.background = element_rect(fill = "transparent", color = NA),
-      legend.position = c(-0.01, 1.058),
+      legend.position = c(0.01, 1.058),
       legend.justification = c(0, 1),
       legend.text = element_text(size = 8, face = "plain"),
       legend.background = element_rect(fill = "transparent", color = NA),
@@ -133,16 +133,18 @@ plot_rm_bodyweight <- function(data, lmm_result,
       legend.spacing.x = unit(-0.1, "cm"),
       legend.key.height = unit(0.4, "cm"),
       axis.text = element_text(face = "bold", color = "black"),
-      axis.title = element_text(face = "bold", color = "black"),
-      axis.title.y = element_text(margin = margin(r = 10)),
+      axis.title = element_text(size = 11, face = "bold", color = "black"),
+      axis.title.y = element_text(margin = margin(r = 12)),
       axis.ticks.length = unit(0.15, "cm"),
       axis.line = element_line(color = "black", linewidth = 0.8),
       axis.ticks = element_line(color = "black", linewidth = 0.8)
     ) +
     guides(
       linetype = "none",  # Hide linetype legend (redundant with shape/fill)
-      shape = guide_legend(override.aes = list(linetype = c("solid", "solid", "twodash", "twodash"))),
-      fill = guide_legend(override.aes = list(linetype = c("solid", "solid", "twodash", "twodash")))
+      shape = guide_legend(ncol = 1, byrow = TRUE, 
+                          override.aes = list(linetype = c("twodash", "twodash", "solid", "solid"))),
+      fill = guide_legend(ncol = 1, byrow = TRUE,
+                         override.aes = list(linetype = c("twodash", "twodash", "solid", "solid")))
     )
   
   return(p)

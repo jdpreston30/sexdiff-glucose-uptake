@@ -81,7 +81,7 @@
 #' @importFrom stats lm shapiro.test residuals cooks.distance oneway.test
 #' @importFrom rstatix games_howell_test
 #' @export
-run_anova <- function(data, response, factor1, factor2, 
+run_anova <- function(data, response, factor1 = "sex", factor2 = "diet", 
                       alpha = 0.05, auto_transform = TRUE, use_welch = TRUE) {
   
   # Initialize results list

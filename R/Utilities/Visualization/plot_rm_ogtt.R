@@ -100,7 +100,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
       ),
       labels = c("M_LF" = "Male LF", "F_LF" = "Female LF",
                  "M_HF" = "Male HF", "F_HF" = "Female HF"),
-      breaks = c("M_LF", "F_LF", "M_HF", "F_HF")
+      breaks = c("F_LF", "F_HF", "M_LF", "M_HF")
     ) +
     scale_fill_manual(
       values = c(
@@ -111,7 +111,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
       ),
       labels = c("M_LF" = "Male LF", "F_LF" = "Female LF",
                  "M_HF" = "Male HF", "F_HF" = "Female HF"),
-      breaks = c("M_LF", "F_LF", "M_HF", "F_HF")
+      breaks = c("F_LF", "F_HF", "M_LF", "M_HF")
     ) +
     scale_linetype_manual(
       values = c("M" = "solid", "F" = "twodash")
@@ -139,7 +139,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
     annotation_custom(
       grob = grid::textGrob(
         label = p_text,
-        x = 0.971, y = 0.993,
+        x = 0.971, y = 1.001,
         hjust = 1, vjust = 1,
         gp = grid::gpar(fontsize = 8, fontfamily = "Arial", fontface = "plain", lineheight = 1.17)
       ),
@@ -159,11 +159,10 @@ plot_rm_ogtt <- function(data, rmanova_result,
       legend.key = element_rect(fill = "transparent", color = NA),
       legend.spacing.y = unit(-0.15, "cm"),
       legend.key.width = unit(0.5, "cm"),
-      legend.spacing.x = unit(-0.1, "cm"),
       legend.key.height = unit(0.4, "cm"),
       axis.text = element_text(face = "bold", color = "black"),
-      axis.title = element_text(face = "bold", color = "black"),
-      axis.title.y = element_text(margin = margin(r = 5)),
+      axis.title = element_text(size = 11, face = "bold", color = "black"),
+      axis.title.y = element_text(margin = margin(r = 12)),
       axis.ticks.length = unit(0.15, "cm"),
       axis.line = element_line(color = "black", linewidth = 0.8),
       axis.ticks = element_line(color = "black", linewidth = 0.8),
@@ -172,10 +171,10 @@ plot_rm_ogtt <- function(data, rmanova_result,
     ) +
     guides(
       linetype = "none",  # Hide linetype legend (redundant with shape/fill)
-      shape = guide_legend(ncol = 2, byrow = TRUE, 
-                          override.aes = list(linetype = c("solid", "twodash", "solid", "twodash"))),
-      fill = guide_legend(ncol = 2, byrow = TRUE,
-                         override.aes = list(linetype = c("solid", "twodash", "solid", "twodash")))
+      shape = guide_legend(ncol = 1, byrow = TRUE, 
+                          override.aes = list(linetype = c("twodash", "twodash", "solid", "solid"))),
+      fill = guide_legend(ncol = 1, byrow = TRUE,
+                         override.aes = list(linetype = c("twodash", "twodash", "solid", "solid")))
     )
   
   return(p)

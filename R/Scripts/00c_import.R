@@ -16,7 +16,8 @@ glucose_uptake <- read_excel(raw_data, sheet = "GU") |>
     ID = as.factor(ID),
     sex = as.factor(sex),
     diet = as.factor(diet)
-  )
+  ) |>
+  select(-glucose_dose)
 #- 0d.1.2: Ex-Vivo Glucose Uptake
 ex_vivo_glucose_uptake <- read_excel(raw_data, sheet = "EVGU") |>
   mutate(

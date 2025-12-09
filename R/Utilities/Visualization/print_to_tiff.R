@@ -53,7 +53,7 @@
 #'
 #' @importFrom ggplot2 ggsave
 #' @export
-print_to_tiff <- function(plot, filename, width = 8.5, height = 11, dpi = 600,
+print_to_tiff <- function(plot, filename, width = 8.5, height = 11, dpi = 800,
                           output_dir = NULL, auto_open = TRUE, compression = "lzw") {
   
   # Use config path if output_dir not specified

@@ -4,18 +4,30 @@ FROM rocker/r-ver:4.5.1
 RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libcurl4-openssl-dev \
+    libssl-dev \
+    libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    libtiff5-dev \
+    libjpeg-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /project
 
-# Copy DESCRIPTION for package installation
-COPY DESCRIPTION .
+# Install renv
+ENV RENV_VERSION 1.1.5
+RUN R -e "install.packages('renv', repos = c(CRAN = 'https://cloud.r-project.org'))"
 
-# Install CRAN packages from Imports section
-RUN R -e "desc <- read.dcf('DESCRIPTION'); packages <- gsub('\\s+', '', strsplit(desc[,'Imports'], ',')[[1]]); install.packages(packages)"
+# Copy renv infrastructure
+COPY renv.lock renv.lock
+COPY .Rprofile .Rprofile
+COPY renv/activate.R renv/activate.R
+COPY renv/settings.json renv/settings.json
 
-# Install Bioconductor packages
-RUN R -e "if (!requireNamespace('BiocManager', quietly = TRUE)) install.packages('BiocManager'); desc <- read.dcf('DESCRIPTION'); bioc_pkgs <- gsub('\\s+', '', strsplit(desc[,'Bioconductor'], ',')[[1]]); if (length(bioc_pkgs) > 0 && bioc_pkgs[1] != '') BiocManager::install(bioc_pkgs)"
+# Restore packages from lockfile
+RUN R -e "renv::restore()"
 
 # Copy all project files
 COPY . .
