@@ -37,4 +37,3 @@ Cardiac/Heart
 Sex: p = 0.096
 Diet: p < 0.001
 Interaction: p = 0.38
-
