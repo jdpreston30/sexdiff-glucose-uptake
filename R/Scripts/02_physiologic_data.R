@@ -1,5 +1,5 @@
 #* 2: Phenotpyic Data Analysis
-#+ 2.1: OGTT LMM
+#+ 2.1: OGTT RM ANOVA
 #- 2.1.1: Reformat data to long format for LMM
 OGTT <- phenotypic_physiologic |>
   select(ID:diet, OGTT_BG_0m:OGTT_BG_45m) |>
@@ -10,7 +10,7 @@ OGTT <- phenotypic_physiologic |>
     names_transform = list(time = ~as.numeric(gsub("m", "", .))),
     values_to = "OGTT_BG"
   )
-#- 2.1.2: Run LMM on OGTT Blood Glucose
+#- 2.1.2: Run RM ANOVA on OGTT Blood Glucose
 OGTT_RMANOVA <- run_rm_anova(
   data = OGTT,
   id_col = "ID",
@@ -18,8 +18,8 @@ OGTT_RMANOVA <- run_rm_anova(
   value_col = "OGTT_BG",
   between_factors = c("sex", "diet")
 )
-# + 2.2: Insulin Response Test LMM
-#- 2.2.1: Reformat data to long format for LMM 
+# + 2.2: Insulin Response Test RM ANOVA
+#- 2.2.1: Reformat data to long format for ANOVA
 IRT <- phenotypic_physiologic |>
   select(ID:diet, IRT_FBG, IRT_BG_insulin_15m) |>
   filter(!is.na(IRT_BG_insulin_15m)) |>
@@ -35,7 +35,7 @@ IRT <- phenotypic_physiologic |>
     )
   ) |>
   select(ID, sex, diet, time, IRT_BG)
-#- 2.2.2: Run LMM on IRT Blood Glucose
+#- 2.2.2: Run ANOVA on IRT Blood Glucose
 IRT_RMANOVA <- run_rm_anova(
   data = IRT,
   id_col = "ID",
