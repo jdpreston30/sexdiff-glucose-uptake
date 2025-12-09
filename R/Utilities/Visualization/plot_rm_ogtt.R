@@ -49,7 +49,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
   sex_diet_text <- if (sex_diet_p < 0.001) {
     "Sex \u00D7 Diet: p < 0.001"
   } else {
-    paste0("Sex \u00D7 Diet: p = ", sprintf("%.4f", sex_diet_p))
+    paste0("Sex \u00D7 Diet: p = ", sprintf("%.3f", sex_diet_p))
   }
   
   # Diet × Time p-value (use corrected if sphericity violated)
@@ -66,7 +66,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
   diet_time_text <- if (diet_time_p < 0.001) {
     "Time \u00D7 Diet: p < 0.001"
   } else {
-    paste0("Time \u00D7 Diet: p = ", sprintf("%.4f", diet_time_p))
+    paste0("Time \u00D7 Diet: p = ", sprintf("%.3f", diet_time_p))
   }
   
   # Combine p-value text
