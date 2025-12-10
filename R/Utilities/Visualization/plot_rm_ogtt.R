@@ -84,12 +84,15 @@ plot_rm_ogtt <- function(data, rmanova_result,
                                  linetype = !!sym(sex_col))) +
     # Add lines
     geom_line(linewidth = 0.7) +
+    # Add error bars (before points so they appear behind symbols)
+    geom_errorbar(aes(ymin = mean_bg - se_bg, ymax = mean_bg + se_bg),
+                  width = 1.5, linewidth = 0.5, linetype = "solid") +
     # Add points - male squares (M_HF, M_LF) - scaled up to match triangle height
     geom_point(data = filter(summary_data, group %in% c("M_HF", "M_LF")),
-               size = 2.94, stroke = 0.8) +
+               size = 1.85, stroke = 0.8) +
     # Add points - female triangles (F_HF, F_LF)
     geom_point(data = filter(summary_data, group %in% c("F_HF", "F_LF")),
-               size = 2.2, stroke = 0.8) +
+               size = 1.39, stroke = 0.8) +
     # Manual scales
     scale_shape_manual(
       values = c(
@@ -119,7 +122,6 @@ plot_rm_ogtt <- function(data, rmanova_result,
     # Scales
     scale_x_continuous(
       breaks = c(0, 15, 30, 45),
-      limits = c(0, 45),
       expand = expansion(mult = c(0.05, 0.05), add = 0)
     ) +
     scale_y_continuous(

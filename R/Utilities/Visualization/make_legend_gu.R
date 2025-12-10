@@ -81,7 +81,7 @@ make_legend_gu <- function() {
           pattern = c("none", "none", "circle", "circle"),
           pattern_fill = c("black", "black", "black", "white"),
           pattern_colour = c(NA, NA, NA, NA),
-          size = 4.0
+          size = 2.52
         ),
         keywidth = unit(0.6, "cm"),
         keyheight = unit(0.3, "cm"),
