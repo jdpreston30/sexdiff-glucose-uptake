@@ -1,42 +1,26 @@
-# Analysis Configuration - Dynamic Computer Detection
+# Analysis Configuration
 # Project settings and data paths for reproducible analysis
 
-# Computer-specific path templates
-computers:
-  laptop:
-    user_home: "/Users/jdp2019"
-    onedrive_path: "Library/CloudStorage/OneDrive-Emory"
-    metabojanitor_subpath: "MetaboJanitoR"
-    figures_path: "Outputs/Figures/Final"
-  
-  desktop:
-    user_home: "/Users/JoshsMacbook2015" 
-    onedrive_path: "Library/CloudStorage/OneDrive-EmoryUniversity"
-    metabojanitor_subpath: "MetaboJanitoR"
-    figures_path: "Outputs/Figures/Final"
-
-# Dynamic path templates (will be populated based on computer selection)
 paths:
-  base_data_path: "{user_home}/{onedrive_path}/Research/Manuscripts and Projects/Active Projects/Other/Sex Differences AT GU/Sexdiff_GU_paper - General/AJPE_submission/Data"
-  # Specific file paths (built from base)
-  raw_data: "{base_data_path}/clean_compiled_data.xlsx"
+  # Data file path (relative to project root)
+  raw_data: "All_Run/clean_compiled_data.xlsx"
   
   # Output paths (relative to project root)
   output: "./Outputs"
-  figures: "{figures_path}"
+  figures: "Outputs/Figures/Final"
   
   # Script and utility paths
   scripts: "R/Scripts/"
   utils: "R/Utilities/"
 
-  # Environment preferences
-  tibble_options:
-    print_max: 100
-    print_min: 100
-    sigfig: 3
-    
-  # Data.table preferences  
-  datatable_options:
-    print_class: true
-    print_keys: true
-    aware: true
+# Environment preferences
+tibble_options:
+  print_max: 100
+  print_min: 100
+  sigfig: 3
+  
+# Data.table preferences  
+datatable_options:
+  print_class: true
+  print_keys: true
+  aware: true
