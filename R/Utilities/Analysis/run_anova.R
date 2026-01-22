@@ -19,11 +19,11 @@
 #'   when variances are unequal.
 #'
 #' @return A list containing:
-#'   \item{model}{The fitted ANOVA model (lm object)}
+#'   \item{model}{The fitted model (lm object for parametric, art object for ART)}
 #'   \item{anova_table}{ANOVA table with F-statistics and p-values}
-#'   \item{anova_method}{Character string: "standard", "welch", or "nonparametric_recommended"}
+#'   \item{anova_method}{Character string: "standard", "welch", or "ART"}
 #'   \item{diagnostics}{List of assumption test results}
-#'   \item{transformation}{Character string: "none", "log(x)", or "nonparametric_recommended"}
+#'   \item{transformation}{Character string: "none", "log(x)", or "ART"}
 #'   \item{assumptions_met}{Logical indicating if all assumptions were satisfied}
 #'   \item{warnings}{Character vector of any assumption violations or concerns}
 #'   \item{posthoc}{Post-hoc test results if interaction is significant}
@@ -47,12 +47,14 @@
 #'    - Use transformed data if assumptions improve
 #'    
 #' 4. **If both normality and homogeneity fail after transformation**:
-#'    - Flag for non-parametric alternative
-#'    - Recommend Aligned Rank Transform (ART) ANOVA
+#'    - Use **Aligned Rank Transform (ART) ANOVA**
+#'    - Non-parametric approach that handles interactions properly
+#'    - Uses ARTool package (Wobbrock et al., 2011)
 #'    
 #' 5. **Post-hoc testing** (when interaction is significant):
 #'    - Tukey HSD when standard ANOVA used (equal variances)
 #'    - Games-Howell when Welch's used (unequal variances)
+#'    - emmeans on ART when ART-ANOVA used (non-parametric)
 #'    - Generates Compact Letter Display (CLD) for plotting
 #'
 #' **Statistical Justification:**
@@ -78,6 +80,8 @@
 #' }
 #'
 #' @importFrom car Anova leveneTest
+#' @importFrom ARTool art artlm
+#' @importFrom emmeans emmeans
 #' @importFrom stats lm shapiro.test residuals cooks.distance oneway.test
 #' @importFrom rstatix games_howell_test
 #' @export
@@ -258,21 +262,32 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
       }
       
     } else {
-      # Log transformation didn't help
+      # Log transformation didn't help - use ART-ANOVA
       cat("\n✗ Log transformation failed to satisfy normality\n")
-      cat("⚠ Consider non-parametric alternative (aligned rank transform ANOVA)\n")
+      cat("→ Using Aligned Rank Transform (ART) ANOVA for non-parametric factorial analysis\n")
       
-      # Return original model but flag for non-parametric
-      result$model <- original_fit$model
-      result$anova_table <- original_fit$anova_table
-      result$diagnostics <- original_fit$diagnostics
-      result$transformation <- "nonparametric_recommended"
-      anova_method <- "nonparametric_recommended"
-      result$assumptions_met <- FALSE
+      library(ARTool)
+      
+      # Fit ART model
+      formula_str <- paste(response, "~", factor1, "*", factor2)
+      art_model <- art(as.formula(formula_str), data = data)
+      
+      # Get ANOVA table from ART model
+      art_anova <- anova(art_model)
+      
+      # Store results
+      result$model <- art_model
+      result$anova_table <- art_anova
+      result$diagnostics <- original_fit$diagnostics  # Keep original diagnostics for reference
+      result$transformation <- "ART"
+      anova_method <- "ART"
+      result$assumptions_met <- TRUE  # ART doesn't require parametric assumptions
+      final_data <- data  # ART uses original data
       
       warnings_list <- c(warnings_list, 
-                        "Both original and log-transformed data fail normality",
-                        "Consider using aligned rank transform ANOVA (ARTool package)")
+                        "Parametric assumptions violated - ART-ANOVA used (non-parametric factorial test)")
+      
+      cat("✓ ART-ANOVA does not require normality or homogeneity assumptions\n")
     }
     
   } else {
@@ -291,14 +306,23 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
   result$n_per_group <- table(data[[factor1]], data[[factor2]])
   
   # Step 4: Run post-hoc tests if interaction is significant
-  interaction_term <- paste0(factor1, ":", factor2)
-  interaction_p <- result$anova_table[interaction_term, "Pr(>F)"]
+  if (anova_method == "ART") {
+    # For ART models, interaction term format is different
+    interaction_term <- paste0(factor1, ":", factor2)
+    interaction_p <- result$anova_table[interaction_term, "Pr(>F)"]
+  } else {
+    interaction_term <- paste0(factor1, ":", factor2)
+    interaction_p <- result$anova_table[interaction_term, "Pr(>F)"]
+  }
   
   if (!is.na(interaction_p) && interaction_p < alpha) {
     cat("\n=== Post-hoc Analysis ===\n")
     
     # Choose appropriate post-hoc test based on ANOVA method
-    if (anova_method == "welch") {
+    if (anova_method == "ART") {
+      cat(sprintf("Interaction is significant (p = %.4f) - running ART contrasts\n", interaction_p))
+      cat("(Using emmeans on aligned-rank-transformed data)\n")
+    } else if (anova_method == "welch") {
       cat(sprintf("Interaction is significant (p = %.4f) - running Games-Howell test\n", interaction_p))
       cat("(Games-Howell used because variances are unequal)\n")
     } else {
@@ -313,7 +337,45 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
       sep = "_"
     )
     
-    if (anova_method == "welch") {
+    if (anova_method == "ART") {
+      # ART post-hoc using emmeans on aligned-rank-transformed data
+      library(emmeans)
+      
+      # Get emmeans from ART model for the interaction
+      # artlm extracts the linear model for a specific term
+      art_lm <- artlm(result$model, paste0(factor1, ":", factor2))
+      
+      # Get emmeans for the interaction using the actual factor names
+      art_emm <- emmeans(art_lm, specs = as.formula(paste0("~ ", factor1, " * ", factor2)))
+      
+      # Pairwise comparisons
+      art_contrasts <- pairs(art_emm, adjust = "tukey")
+      art_summary <- summary(art_contrasts)
+      
+      # Generate CLD for the simple effects
+      library(multcomp)
+      # Combine factors for CLD
+      cld_result <- cld(art_emm, alpha = alpha, Letters = letters)
+      cld_df <- as.data.frame(cld_result)
+      
+      # Clean up CLD - create group column from the two factors
+      cld_df$group <- paste(cld_df[[factor1]], cld_df[[factor2]], sep = "_")
+      cld_df$letter <- trimws(cld_df$.group)
+      
+      # Select relevant columns
+      cld_df <- cld_df[, c("group", "letter", factor1, factor2)]
+      
+      result$posthoc <- list(
+        art_contrasts = art_summary,
+        cld = cld_df,
+        significant = TRUE,
+        method = "ART + emmeans"
+      )
+      
+      cat("\nCompact Letter Display (groups sharing letters are not significantly different):\n")
+      print(cld_df)
+      
+    } else if (anova_method == "welch") {
       # Games-Howell post-hoc test (doesn't assume equal variances)
       library(rstatix)
       gh_result <- rstatix::games_howell_test(
@@ -339,12 +401,19 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
         stringsAsFactors = FALSE
       )
       
+      # Split group back into factors
+      cld_df[[factor1]] <- sapply(strsplit(cld_df$group, "_"), `[`, 1)
+      cld_df[[factor2]] <- sapply(strsplit(cld_df$group, "_"), `[`, 2)
+      
       result$posthoc <- list(
         games_howell = gh_result,
         cld = cld_df,
         significant = TRUE,
         method = "Games-Howell"
       )
+      
+      cat("\nCompact Letter Display (groups sharing letters are not significantly different):\n")
+      print(cld_df)
       
     } else {
       # Standard Tukey HSD (assumes equal variances)
@@ -369,23 +438,20 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
         stringsAsFactors = FALSE
       )
       
+      # Split group back into factors
+      cld_df[[factor1]] <- sapply(strsplit(cld_df$group, "_"), `[`, 1)
+      cld_df[[factor2]] <- sapply(strsplit(cld_df$group, "_"), `[`, 2)
+      
       result$posthoc <- list(
         tukey = tukey_result,
         cld = cld_df,
         significant = TRUE,
         method = "Tukey HSD"
       )
+      
+      cat("\nCompact Letter Display (groups sharing letters are not significantly different):\n")
+      print(cld_df)
     }
-    
-    # Split group back into factors for both methods
-    cld_df[[factor1]] <- sapply(strsplit(cld_df$group, "_"), `[`, 1)
-    cld_df[[factor2]] <- sapply(strsplit(cld_df$group, "_"), `[`, 2)
-    
-    # Update CLD in result (already set above, just update with factors)
-    result$posthoc$cld <- cld_df
-    
-    cat("\nCompact Letter Display (groups sharing letters are not significantly different):\n")
-    print(cld_df)
     
   } else {
     result$posthoc <- list(significant = FALSE)
