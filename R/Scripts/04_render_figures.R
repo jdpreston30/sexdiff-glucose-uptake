@@ -1,4 +1,7 @@
 #* 4 Render Figures
+#! Journal width req... single column = <=3.5 in
+#! Double (side legend) 4-5in
+#! 6-7.15 in for full page width
 #+ 4.1: Figure 1
 #- 4.1.1: Align all plots as a 2x2 grid to ensure both x and y axis alignment
 aligned_plots <- align_plots(p1A, p1B, p1C, p1D, align = "hv", axis = "tblr")

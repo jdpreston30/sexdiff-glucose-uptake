@@ -34,7 +34,8 @@ Imports:
     readr,
     png,
     stats,
-    multcomp
+    multcomp,
+    emmeans
 Suggests:
     jsonlite,
     rlang,

@@ -8,9 +8,6 @@ GU_SQ_ANOVA <- run_anova(data = glucose_uptake, response = "GU_SQ")
 GU_RP_ANOVA <- run_anova(data = glucose_uptake, response = "GU_RP")
 #- 3.1.4: Brown adipose
 GU_brown_ANOVA <- run_anova(data = glucose_uptake, response = "GU_brown")
-
-print(glucose_uptake |>
-  select(ID, sex, diet, GU_brown), n = Inf)
 #- 3.1.5: EDL muscle
 GU_EDL_ANOVA <- run_anova(data = glucose_uptake, response = "GU_EDL")
 #- 3.1.6: Gastrocnemius muscle
