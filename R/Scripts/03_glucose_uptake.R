@@ -51,8 +51,8 @@ glucose_uptake_Cardiac <- glucose_uptake %>%
 p3a <- plot_gu(
   data = glucose_uptake_WAT,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 3),
-  y_breaks = seq(0, 3, 1),
+  y_limits = c(0, 3.5),
+  y_breaks = seq(0, 3.5, 0.5),
   plot_title = "White Adipose Tissue",
   bar_width = 0.7,
   anova_list = list(
@@ -65,8 +65,8 @@ p3a <- plot_gu(
 p3b <- plot_gu(
   data = glucose_uptake_BAT,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 25),
-  y_breaks = seq(0, 25, 5),
+  y_limits = c(0, 30),
+  y_breaks = seq(0, 30, 5),
   plot_title = "Brown Adipose\nTissue",
   bar_width = 0.591,
   #0.596 to get same absolute bar width as p3a.1 with 4 tissues
@@ -76,8 +76,8 @@ p3b <- plot_gu(
 p3c <- plot_gu(
   data = glucose_uptake_SM,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 20),
-  y_breaks = seq(0, 20, 5),
+  y_limits = c(0, 25),
+  y_breaks = seq(0, 25, 5),
   plot_title = "Skeletal Muscle",
   bar_width = 0.7,
   anova_list = list(
@@ -90,8 +90,8 @@ p3c <- plot_gu(
 p3d <- plot_gu(
   data = glucose_uptake_Cardiac,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 20),
-  y_breaks = seq(0, 20, 5),
+  y_limits = c(0, 25),
+  y_breaks = seq(0, 25, 5),
   plot_title = "Cardiac Tissue",
   bar_width = 0.591,
   anova_list = list(Heart = GU_heart_ANOVA)
@@ -100,8 +100,8 @@ p3d <- plot_gu(
 p3e <- plot_gu_ev(
   data = ex_vivo_long,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 15),
-  y_breaks = seq(0, 15, 3),
+  y_limits = c(0, 18),
+  y_breaks = seq(0, 18, 3),
   plot_title = "Ex Vivo Gonadal AT\nGlucose Uptake",
   bar_width = 0.49,
   mixed_anova_result = GU_ex_vivo_ANOVA
