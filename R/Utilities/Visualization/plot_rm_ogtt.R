@@ -31,7 +31,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
     group_by(!!sym(time_col), !!sym(sex_col), !!sym(diet_col)) %>%
     summarise(
       mean_bg = mean(!!sym(value_col), na.rm = TRUE),
-      se_bg = sd(!!sym(value_col), na.rm = TRUE) / sqrt(n()),
+      sd_bg = sd(!!sym(value_col), na.rm = TRUE),
       .groups = "drop"
     ) %>%
     mutate(
@@ -46,28 +46,20 @@ plot_rm_ogtt <- function(data, rmanova_result,
   
   # Sex × Diet p-value
   sex_diet_p <- anova_table$p[anova_table$Effect == "sex:diet"]
-  sex_diet_text <- if (sex_diet_p < 0.001) {
-    "Sex \u00D7 Diet: p < 0.001"
-  } else {
-    paste0("Sex \u00D7 Diet: p = ", sprintf("%.3f", sex_diet_p))
-  }
+  sex_diet_text <- paste0("Sex \u00D7 Diet: ", format_p_journal(sex_diet_p))
   
-  # Diet × Time p-value (use corrected if sphericity violated)
+  # Diet × Time p-value (use Huynh-Feldt corrected if sphericity violated)
   diet_time_row <- anova_table$Effect == "diet:time"
   
-  # Check if sphericity corrections exist
+  # Check if sphericity corrections exist and use Huynh-Feldt when epsilon > 0.75
   if (!is.null(rmanova_result$sphericity) && "diet:time" %in% rmanova_result$sphericity$Effect) {
-    # Use Greenhouse-Geisser corrected p-value
-    diet_time_p <- rmanova_result$sphericity$`p[GG]`[rmanova_result$sphericity$Effect == "diet:time"]
+    # Use Huynh-Feldt corrected p-value (preferred when epsilon > 0.75)
+    diet_time_p <- rmanova_result$sphericity$`p[HF]`[rmanova_result$sphericity$Effect == "diet:time"]
   } else {
     diet_time_p <- anova_table$p[diet_time_row]
   }
   
-  diet_time_text <- if (diet_time_p < 0.001) {
-    "Time \u00D7 Diet: p < 0.001"
-  } else {
-    paste0("Time \u00D7 Diet: p = ", sprintf("%.3f", diet_time_p))
-  }
+  diet_time_text <- paste0("Time \u00D7 Diet: ", format_p_journal(diet_time_p))
   
   # Combine p-value text
   p_text <- paste(sex_diet_text, diet_time_text, sep = "\n")
@@ -85,7 +77,7 @@ plot_rm_ogtt <- function(data, rmanova_result,
     # Add lines
     geom_line(linewidth = 0.7) +
     # Add error bars (before points so they appear behind symbols)
-    geom_errorbar(aes(ymin = mean_bg - se_bg, ymax = mean_bg + se_bg),
+    geom_errorbar(aes(ymin = mean_bg - sd_bg, ymax = mean_bg + sd_bg),
                   width = 1.5, linewidth = 0.5, linetype = "solid") +
     # Add points - male squares (M_HF, M_LF) - scaled up to match triangle height
     geom_point(data = filter(summary_data, group %in% c("M_HF", "M_LF")),
@@ -159,9 +151,9 @@ plot_rm_ogtt <- function(data, rmanova_result,
       legend.text = element_text(size = 8, face = "plain"),
       legend.background = element_rect(fill = "transparent", color = NA),
       legend.key = element_rect(fill = "transparent", color = NA),
-      legend.spacing.y = unit(-0.15, "cm"),
+      legend.spacing.y = unit(-0.3, "cm"),
       legend.key.width = unit(0.5, "cm"),
-      legend.key.height = unit(0.4, "cm"),
+      legend.key.height = unit(0.3, "cm"),
       axis.text = element_text(face = "bold", color = "black"),
       axis.title = element_text(size = 11, face = "bold", color = "black"),
       axis.title.y = element_text(margin = margin(r = 12)),

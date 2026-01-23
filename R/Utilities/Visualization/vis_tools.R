@@ -106,3 +106,37 @@ figure_labels <- function(labels, size = 14, fontface = "bold", fontfamily = "Ar
 
   return(label_layers)
 }
+
+#' Format P-values for Journal Requirements
+#'
+#' Formats p-values according to journal rounding guidelines:
+#' - 0.01 ≤ P ≤ 1.00: Round to 2 decimal places
+#' - 0.001 ≤ P ≤ 0.009: Round to 3 decimal places
+#' - P < 0.001: Report as "p < 0.001"
+#'
+#' @param p Numeric p-value to format
+#' @param include_p Logical; if TRUE, includes "p = " prefix (default: TRUE)
+#'
+#' @return Formatted p-value string
+#'
+#' @examples
+#' \dontrun{
+#' format_p_journal(0.0234)   # "p = 0.02"
+#' format_p_journal(0.0048)   # "p = 0.005"
+#' format_p_journal(0.00023)  # "p < 0.001"
+#' }
+#'
+#' @export
+format_p_journal <- function(p, include_p = TRUE) {
+  if (is.na(p) || length(p) == 0) return("p = NA")
+  
+  prefix <- if (include_p) "p = " else ""
+  
+  if (p < 0.001) {
+    return(if (include_p) "p < 0.001" else "< 0.001")
+  } else if (p < 0.01) {
+    return(paste0(prefix, sprintf("%.3f", p)))
+  } else {
+    return(paste0(prefix, sprintf("%.2f", p)))
+  }
+}

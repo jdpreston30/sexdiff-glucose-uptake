@@ -29,7 +29,7 @@ plot_anova_barplot <- function(data, anova_result,
     group_by(!!sym(factor1), !!sym(factor2)) %>%
     summarise(
       mean_val = mean(!!sym(response), na.rm = TRUE),
-      se_val = sd(!!sym(response), na.rm = TRUE) / sqrt(n()),
+      sd_val = sd(!!sym(response), na.rm = TRUE),
       .groups = "drop"
     ) %>%
     mutate(
@@ -43,17 +43,11 @@ plot_anova_barplot <- function(data, anova_result,
   p_diet <- anova_table[grep(paste0("^", factor2, "$"), rownames(anova_table), ignore.case = TRUE), "Pr(>F)"][1]
   p_interaction <- anova_table[grep(":", rownames(anova_table)), "Pr(>F)"][1]
   
-  # Format p-values
-  format_p <- function(p) {
-    if (length(p) == 0 || is.na(p)) return("p = NA")
-    if (p < 0.001) return("p < 0.001")
-    return(paste0("p = ", sprintf("%.3f", p)))
-  }
-  
+  # Format p-values using journal requirements
   p_text <- paste0(
-    "Sex: ", format_p(p_sex), "\n",
-    "Diet: ", format_p(p_diet), "\n",
-    "Int.: ", format_p(p_interaction)
+    "Sex: ", format_p_journal(p_sex), "\n",
+    "Diet: ", format_p_journal(p_diet), "\n",
+    "Int.: ", format_p_journal(p_interaction)
   )
   
   # Add CLD letters if interaction is significant
@@ -83,7 +77,7 @@ plot_anova_barplot <- function(data, anova_result,
   p <- ggplot(summary_data, aes(x = !!sym(factor1), y = mean_val, fill = !!sym(factor2))) +
     geom_bar(stat = "identity", position = position_dodge(0.8), width = 0.7,
              color = "black", linewidth = 0.6) +
-    geom_errorbar(aes(ymin = mean_val, ymax = mean_val + se_val),
+    geom_errorbar(aes(ymin = mean_val, ymax = mean_val + sd_val),
                   position = position_dodge(0.8), width = 0.25, linewidth = 0.5) +
     scale_fill_manual(
       values = c("LF" = "white", "HF" = "black"),
@@ -129,7 +123,7 @@ plot_anova_barplot <- function(data, anova_result,
     # Use relative offset based on y-axis range
     letter_height <- (y_limits[2] - y_limits[1]) * 0.05
     summary_data <- summary_data %>%
-      mutate(letter_y = mean_val + se_val + letter_height)
+      mutate(letter_y = mean_val + sd_val + letter_height)
     
     p <- p + geom_text(
       data = summary_data,
