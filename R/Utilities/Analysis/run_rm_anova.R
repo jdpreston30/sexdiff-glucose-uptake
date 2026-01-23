@@ -68,14 +68,39 @@ run_rm_anova <- function(data, id_col, time_col, value_col, between_factors = NU
     }
   }
   
-  # Check for complete cases
+  # Identify subjects with ANY data for this variable
+  subjects_with_data <- data %>%
+    filter(!is.na(!!sym(value_col))) %>%
+    pull(!!sym(id_col)) %>%
+    unique()
+  
+  n_subjects_total <- length(subjects_with_data)
+  
+  # Check for subjects with partial data (true missing data)
+  subjects_complete <- data %>%
+    filter(!is.na(!!sym(value_col))) %>%
+    group_by(!!sym(id_col)) %>%
+    summarise(n_timepoints = n_distinct(!!sym(time_col)), .groups = "drop")
+  
+  expected_timepoints <- n_distinct(data[[time_col]])
+  subjects_partial <- subjects_complete %>%
+    filter(n_timepoints < expected_timepoints)
+  
+  # Check for complete cases (including between factors)
   n_complete <- sum(complete.cases(data[, c(id_col, time_col, value_col, between_factors)]))
   n_total <- nrow(data)
-  cat("Complete cases:", n_complete, "/", n_total, "\n")
   
-  if (n_complete < n_total) {
-    cat("WARNING: Missing data detected. RM-ANOVA uses listwise deletion.\n")
-    warnings_list <- c(warnings_list, "Missing data present")
+  cat("Subjects with any data:", n_subjects_total, "\n")
+  cat("Expected timepoints per subject:", expected_timepoints, "\n")
+  
+  if (nrow(subjects_partial) > 0) {
+    cat("WARNING: TRUE MISSING DATA detected\n")
+    cat("  ", nrow(subjects_partial), "subject(s) have partial data (incomplete time points)\n")
+    cat("  Subject IDs with partial data:", paste(subjects_partial[[id_col]], collapse = ", "), "\n")
+    cat("  RM-ANOVA uses listwise deletion for these subjects.\n")
+    warnings_list <- c(warnings_list, "True missing data present (partial time points)")
+  } else {
+    cat("No true missing data: All subjects in analysis have complete time series\n")
   }
   
   # Remove missing data
