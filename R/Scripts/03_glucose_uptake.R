@@ -51,8 +51,8 @@ glucose_uptake_Cardiac <- glucose_uptake %>%
 p3a <- plot_gu(
   data = glucose_uptake_WAT,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 3.5),
-  y_breaks = seq(0, 3.5, 0.5),
+  y_limits = c(0, 4),
+  y_breaks = seq(0, 4, 1),
   plot_title = "White Adipose Tissue",
   bar_width = 0.7,
   anova_list = list(
@@ -100,9 +100,9 @@ p3d <- plot_gu(
 p3e <- plot_gu_ev(
   data = ex_vivo_long,
   y_label = "3H-2DG (CPM/mg)",
-  y_limits = c(0, 18),
-  y_breaks = seq(0, 18, 3),
-  plot_title = "Ex Vivo Gonadal AT\nGlucose Uptake",
+  y_limits = c(0, 25),
+  y_breaks = seq(0, 25, 5),
+  plot_title = "Ex Vivo Gonadal AT Glucose Uptake",
   bar_width = 0.49,
   mixed_anova_result = GU_ex_vivo_ANOVA
 )

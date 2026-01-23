@@ -36,7 +36,6 @@ fig2 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
     E = c(0.74, 4.07),
     "Figure 2" = c(0.49, 10.43)
   ))
-  print_to_tiff(fig2, "fig2", dpi = 300)
 #+ 4.3: Figure 3
 fig3 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   #- Row 1
@@ -47,7 +46,7 @@ fig3 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   draw_plot(p3d, x = 5.32, y = 2.8675, width = 2.5, height = 4) +
   #- Row 3
   draw_plot(p3e, x = 0.668, y = -0.5175, width = 4.75, height = 4) +
-  draw_grob(make_legend_gu(), x = 5.92, y = 0.8175, width = 1.8, height = 2.18) +
+  draw_grob(make_legend_gu(), x = 5.888333, y = 0.9191667, width = 1.8, height = 2.18) +
   # Labels
   figure_labels(list(
     A = c(0.74, 10.12),
@@ -63,7 +62,7 @@ fig4_img <- png::readPNG("Outputs/Figures/raw/fig4_raw.png")
 fig4_grob <- grid::rasterGrob(fig4_img, interpolate = TRUE)
 #- 4.4.2: Render Figure 4 with same structure as other figures
 fig4 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
-  draw_grob(fig4_grob, x = 0+0.125, y = 0-0.03, width = 8.5, height = 11) +
+  draw_grob(fig4_grob, x = 0.125, y = -0.03, width = 8.5, height = 11) +
   # Labels
   figure_labels(list(
     "Figure 4" = c(0.49, 10.43)
@@ -73,17 +72,17 @@ fig4 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
 print_to_tiff(fig1, "Fig1", output_dir = "Outputs/Figures")
 #- 4.5.2: Figure 2
 print_to_tiff(fig2, "Fig2", output_dir = "Outputs/Figures")
-#- 5.5.3: Figure 3
+#- 4.5.3: Figure 3
 print_to_tiff(fig3, "Fig3", output_dir = "Outputs/Figures")
-#- 5.5.4: Figure 4
+#- 4.5.4: Figure 4
 print_to_tiff(fig4, "Fig4", output_dir = "Outputs/Figures")
-#+ 5.6: Combine All Figures into Single PDF
-#- 5.6.1: Read in all TIFF files
+#+ 4.6: Combine All Figures into Single PDF
+#- 4.6.1: Read in all TIFF files
 fig1_tiff <- tiff::readTIFF("Outputs/Figures/Fig1.tiff", native = FALSE)
 fig2_tiff <- tiff::readTIFF("Outputs/Figures/Fig2.tiff", native = FALSE)
 fig3_tiff <- tiff::readTIFF("Outputs/Figures/Fig3.tiff", native = FALSE)
 fig4_tiff <- tiff::readTIFF("Outputs/Figures/Fig4.tiff", native = FALSE)
-#- 5.6.2: Create PDF with all figures (one per page, no downsizing)
+#- 4.6.2: Create PDF with all figures (one per page, no downsizing)
 pdf("Outputs/Figures/Figs1-4.pdf", width = 8.5, height = 11)
 # Figure 1
 grid::grid.newpage()

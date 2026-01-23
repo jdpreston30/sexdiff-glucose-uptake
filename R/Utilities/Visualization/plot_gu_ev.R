@@ -177,7 +177,7 @@ plot_gu_ev <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8
     # Format main effects with lineheight control
     label_text <- paste0(
       "Sex: ", format_p_journal(p_sex), "\n",
-      " Diet: ", format_p_journal(p_diet), "\n",
+      "Diet: ", format_p_journal(p_diet), "\n",
       "Insulin: ", format_p_journal(p_tx), "\n",
       int_text
     )
