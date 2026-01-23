@@ -43,8 +43,8 @@ p1B <- plot_anova_barplot(
   anova_result = FE_ANOVA,
   response = "food_efficiency",
   y_label = "Food Efficiency (g/kcal)",
-  y_limits = c(0, 0.02),
-  y_breaks = seq(0, 0.02, 0.005)
+  y_limits = c(0, 0.025),
+  y_breaks = seq(0, 0.025, 0.005)
 )
 #- 1.3.3: Plot Lean Mass
 p1C <- plot_anova_barplot(
@@ -61,6 +61,6 @@ p1D <- plot_anova_barplot(
   anova_result = FM_ANOVA,
   response = "FM",
   y_label = "Fat Mass (g)",
-  y_limits = c(0, 12),
-  y_breaks = seq(0, 12, 3)
+  y_limits = c(0, 14),
+  y_breaks = seq(0, 14, 2)
 )

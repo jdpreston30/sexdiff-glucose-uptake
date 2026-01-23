@@ -75,8 +75,8 @@ p2d <- plot_anova_barplot(
   anova_result = HOMA2_ANOVA,
   response = "HOMA2_IR",
   y_label = "HOMA2-IR",
-  y_limits = c(0, 8),
-  y_breaks = c(0, 2, 4, 6, 8)
+  y_limits = c(0, 10),
+  y_breaks = c(0, 2, 4, 6, 8, 10)
 )
 #- 2.5.5: Plot 45-min Insulin ANOVA
 p2e <- plot_anova_barplot(
@@ -86,6 +86,6 @@ p2e <- plot_anova_barplot(
   factor1 = "sex",
   factor2 = "diet",
   y_label = "Post-Bolus Insulin (ng/mL)",
-  y_limits = c(0, 2.5),
-  y_breaks = c(0, 0.5, 1, 1.5, 2, 2.5)
+  y_limits = c(0, 3),
+  y_breaks = c(0, 0.5, 1, 1.5, 2, 2.5, 3)
 )

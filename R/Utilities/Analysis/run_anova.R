@@ -268,9 +268,20 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
       
       library(ARTool)
       
+      # Remove missing data for ART (ARTool cannot handle NAs)
+      art_data <- data %>% 
+        filter(!is.na(!!sym(response))) %>%
+        droplevels()
+      
+      n_removed <- nrow(data) - nrow(art_data)
+      if (n_removed > 0) {
+        cat(sprintf("Note: Removed %d cases with missing data for ART analysis\n", n_removed))
+        cat(sprintf("      Using n=%d complete cases\n", nrow(art_data)))
+      }
+      
       # Fit ART model
       formula_str <- paste(response, "~", factor1, "*", factor2)
-      art_model <- art(as.formula(formula_str), data = data)
+      art_model <- art(as.formula(formula_str), data = art_data)
       
       # Get ANOVA table from ART model
       art_anova <- anova(art_model)
@@ -282,10 +293,14 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
       result$transformation <- "ART"
       anova_method <- "ART"
       result$assumptions_met <- TRUE  # ART doesn't require parametric assumptions
-      final_data <- data  # ART uses original data
+      final_data <- art_data  # ART uses complete cases only
       
       warnings_list <- c(warnings_list, 
                         "Parametric assumptions violated - ART-ANOVA used (non-parametric factorial test)")
+      if (n_removed > 0) {
+        warnings_list <- c(warnings_list,
+                          sprintf("Listwise deletion: %d cases removed due to missing data", n_removed))
+      }
       
       cat("✓ ART-ANOVA does not require normality or homogeneity assumptions\n")
     }
@@ -301,9 +316,9 @@ run_anova <- function(data, response, factor1 = "sex", factor2 = "diet",
   
   result$anova_method <- anova_method
   
-  # Add warnings and sample size info
+  # Add warnings and sample size info (use final_data which may be filtered for ART)
   result$warnings <- warnings_list
-  result$n_per_group <- table(data[[factor1]], data[[factor2]])
+  result$n_per_group <- table(final_data[[factor1]], final_data[[factor2]])
   
   # Step 4: Run post-hoc tests if interaction is significant
   if (anova_method == "ART") {

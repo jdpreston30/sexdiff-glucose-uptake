@@ -48,7 +48,7 @@ plot_gu_ev <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8
     group_by(EV_tx, group, .drop = TRUE) %>%
     summarise(
       mean_val = mean(response, na.rm = TRUE),
-      se_val = sd(response, na.rm = TRUE) / sqrt(n()),
+      sd_val = sd(response, na.rm = TRUE),
       .groups = "drop"
     )
   
@@ -65,7 +65,7 @@ plot_gu_ev <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8
       pattern_angle = 0
     ) +
     geom_errorbar(
-      aes(ymin = mean_val, ymax = mean_val + se_val),
+      aes(ymin = mean_val, ymax = mean_val + sd_val),
       position = position_dodge(0.75), 
       width = 0.25, 
       linewidth = 0.5
@@ -161,16 +161,12 @@ plot_gu_ev <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8
     if (all(interaction_pvals >= 0.05, na.rm = TRUE)) {
       int_text <- "Interactions: n.s."
     } else {
-      # Format each interaction p-value
+      # Format each interaction p-value using journal requirements
       int_labels <- c("Tx×Sex", "Tx×Diet", "Sex×Diet", "Tx×Sex×Diet")
       int_formatted <- sapply(seq_along(interaction_pvals), function(i) {
         p_val <- interaction_pvals[i]
         if (!is.na(p_val)) {
-          if (p_val < 0.001) {
-            paste0(int_labels[i], ": p<0.001")
-          } else {
-            paste0(int_labels[i], ": p=", sprintf("%.3f", p_val))
-          }
+          paste0(int_labels[i], ": ", format_p_journal(p_val))
         } else {
           NULL
         }
@@ -180,9 +176,9 @@ plot_gu_ev <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8
     
     # Format main effects with lineheight control
     label_text <- paste0(
-      "Sex: ", ifelse(p_sex < 0.001, "p<0.001", sprintf("p=%.3f", p_sex)), "\n",
-      "Diet: ", ifelse(p_diet < 0.001, "p<0.001", sprintf("p=%.3f", p_diet)), "\n",
-      "Insulin: ", ifelse(p_tx < 0.001, "p<0.001", sprintf("p=%.3f", p_tx)), "\n",
+      "Sex: ", format_p_journal(p_sex), "\n",
+      " Diet: ", format_p_journal(p_diet), "\n",
+      "Insulin: ", format_p_journal(p_tx), "\n",
       int_text
     )
     

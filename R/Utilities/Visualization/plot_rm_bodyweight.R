@@ -29,7 +29,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
     group_by(!!sym(time_col), !!sym(sex_col), !!sym(diet_col)) %>%
     summarise(
       mean_bw = mean(!!sym(value_col), na.rm = TRUE),
-      se_bw = sd(!!sym(value_col), na.rm = TRUE) / sqrt(n()),
+      sd_bw = sd(!!sym(value_col), na.rm = TRUE),
       .groups = "drop"
     ) %>%
     mutate(
@@ -38,11 +38,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
   
   # Extract p-value from LMM result
   p_value <- lmm_result$anova["time:sex:diet", "Pr(>F)"]
-  p_text <- if (p_value < 0.001) {
-    "Time \u00D7 Sex \u00D7 Diet: p < 0.001"
-  } else {
-    paste0("Time \u00D7 Sex \u00D7 Diet: p = ", round(p_value, 4))
-  }
+  p_text <- paste0("Time \u00D7 Sex \u00D7 Diet: ", format_p_journal(p_value))
   
   # Reorder factor levels for legend order: M_LF, M_HF, F_LF, F_HF
   summary_data$group <- factor(summary_data$group, 
@@ -57,7 +53,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
     # Add lines
     geom_line(linewidth = 0.7) +
     # Add error bars (before points so they appear behind symbols)
-    geom_errorbar(aes(ymin = mean_bw - se_bw, ymax = mean_bw + se_bw),
+    geom_errorbar(aes(ymin = mean_bw - sd_bw, ymax = mean_bw + sd_bw),
                   width = 0.115, linewidth = 0.5, linetype = "solid") +
     # Add points - male squares (M_HF, M_LF) - scaled up to match triangle height
     geom_point(data = filter(summary_data, group %in% c("M_HF", "M_LF")),
@@ -130,10 +126,10 @@ plot_rm_bodyweight <- function(data, lmm_result,
       legend.text = element_text(size = 8, face = "plain"),
       legend.background = element_rect(fill = "transparent", color = NA),
       legend.key = element_rect(fill = "transparent", color = NA),
-      legend.spacing.y = unit(-0.15, "cm"),
+      legend.spacing.y = unit(-0.3, "cm"),
       legend.key.width = unit(0.5, "cm"),
       legend.spacing.x = unit(-0.1, "cm"),
-      legend.key.height = unit(0.4, "cm"),
+      legend.key.height = unit(0.3, "cm"),
       axis.text = element_text(face = "bold", color = "black"),
       axis.title = element_text(size = 11, face = "bold", color = "black"),
       axis.title.y = element_text(margin = margin(r = 12)),

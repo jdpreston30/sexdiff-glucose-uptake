@@ -31,7 +31,7 @@ plot_IRT <- function(data, rmanova_result,
     group_by(!!sym(time_col), !!sym(sex_col), !!sym(diet_col)) %>%
     summarise(
       mean_bg = mean(!!sym(value_col), na.rm = TRUE),
-      se_bg = sd(!!sym(value_col), na.rm = TRUE) / sqrt(n()),
+      sd_bg = sd(!!sym(value_col), na.rm = TRUE),
       .groups = "drop"
     ) %>%
     mutate(
@@ -46,11 +46,7 @@ plot_IRT <- function(data, rmanova_result,
   
   # Sex × Diet p-value
   sex_diet_p <- anova_table$p[anova_table$Effect == "sex:diet"]
-  sex_diet_text <- if (sex_diet_p < 0.001) {
-    "Sex \u00D7 Diet: p < 0.001"
-  } else {
-    paste0("Sex \u00D7 Diet: p = ", sprintf("%.3f", sex_diet_p))
-  }
+  sex_diet_text <- paste0("Sex \u00D7 Diet: ", format_p_journal(sex_diet_p))
   
   # Reorder factor levels for legend order
   summary_data$group <- factor(summary_data$group, 
@@ -65,7 +61,7 @@ plot_IRT <- function(data, rmanova_result,
     # Add lines
     geom_line(linewidth = 0.7) +
     # Add error bars (before points so they appear behind symbols)
-    geom_errorbar(aes(ymin = mean_bg - se_bg, ymax = mean_bg + se_bg),
+    geom_errorbar(aes(ymin = mean_bg - sd_bg, ymax = mean_bg + sd_bg),
                   width = 0.48, linewidth = 0.5, linetype = "solid") +
     # Add points - male squares (M_HF, M_LF) - scaled up to match triangle height
     geom_point(data = filter(summary_data, group %in% c("M_HF", "M_LF")),
@@ -139,9 +135,9 @@ plot_IRT <- function(data, rmanova_result,
       legend.text = element_text(size = 8, face = "plain"),
       legend.background = element_rect(fill = "transparent", color = NA),
       legend.key = element_rect(fill = "transparent", color = NA),
-      legend.spacing.y = unit(-0.15, "cm"),
+      legend.spacing.y = unit(-0.3, "cm"),
       legend.key.width = unit(0.5, "cm"),
-      legend.key.height = unit(0.4, "cm"),
+      legend.key.height = unit(0.3, "cm"),
       axis.text = element_text(face = "bold", color = "black"),
       axis.title = element_text(size = 11, face = "bold", color = "black"),
       axis.title.y = element_text(margin = margin(r = 12)),

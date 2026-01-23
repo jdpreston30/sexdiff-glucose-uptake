@@ -71,7 +71,7 @@ plot_gu <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8, p
     group_by(tissue, group) %>%
     summarise(
       mean_val = mean(glucose_uptake, na.rm = TRUE),
-      se_val = sd(glucose_uptake, na.rm = TRUE) / sqrt(n()),
+      sd_val = sd(glucose_uptake, na.rm = TRUE),
       .groups = "drop"
     )
   
@@ -88,7 +88,7 @@ plot_gu <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8, p
       pattern_angle = 0
     ) +
     geom_errorbar(
-      aes(ymin = mean_val, ymax = mean_val + se_val),
+      aes(ymin = mean_val, ymax = mean_val + sd_val),
       position = position_dodge(0.75), 
       width = 0.25, 
       linewidth = 0.5
@@ -185,11 +185,11 @@ plot_gu <- function(data, y_label, y_limits, y_breaks = NULL, bar_width = 0.8, p
         p_diet <- anova_result$anova_table["diet", "Pr(>F)"]
         p_int <- anova_result$anova_table["sex:diet", "Pr(>F)"]
         
-        # Format p-values
+        # Format p-values using journal requirements
         label_text <- paste0(
-          "Sex: ", ifelse(p_sex < 0.001, "p<0.001", sprintf("p=%.3f", p_sex)), "\n",
-          "Diet: ", ifelse(p_diet < 0.001, "p<0.001", sprintf("p=%.3f", p_diet)), "\n",
-          "Int.: ", ifelse(p_int < 0.001, "p<0.001", sprintf("p=%.3f", p_int))
+          "Sex: ", format_p_journal(p_sex), "\n",
+          "Diet: ", format_p_journal(p_diet), "\n",
+          "Int.: ", format_p_journal(p_int)
         )
         
         # Add text below x-axis (using negative y values in data space)

@@ -36,6 +36,7 @@ fig2 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
     E = c(0.74, 4.07),
     "Figure 2" = c(0.49, 10.43)
   ))
+  print_to_tiff(fig2, "fig2", dpi = 300)
 #+ 4.3: Figure 3
 fig3 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   #- Row 1
@@ -58,7 +59,7 @@ fig3 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   ))
 #+ 4.4: Figure 4
 #- 4.4.1: Read in existing PNG (BioRender figure)
-fig4_img <- png::readPNG("Outputs/Figures/raw/fig3_raw.png")
+fig4_img <- png::readPNG("Outputs/Figures/raw/fig4_raw.png")
 fig4_grob <- grid::rasterGrob(fig4_img, interpolate = TRUE)
 #- 4.4.2: Render Figure 4 with same structure as other figures
 fig4 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
