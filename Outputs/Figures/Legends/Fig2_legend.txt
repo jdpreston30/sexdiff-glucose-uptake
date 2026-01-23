@@ -1,0 +1,14 @@
+FIGURE 2: Glucose homeostasis and insulin sensitivity
+--------------------------------------------------------------------------------
+• Panel A (OGTT): n = 11-12 per group
+• Panel B (IRT): n = 4 per group
+• Panel C (Fasted Glucose): n = 20 per group
+• Panel D (HOMA2-IR): n = 4 per group
+• Panel E (Serum Insulin): n = 8-11 per group
+
+Legend states:
+  Panel A: n = 11-12 per group
+  Panel B: n = 4 per group
+  Panel C: n = 20 per group
+  Panel D: n = 4 per group
+  Panel E: n = 8-11 per group

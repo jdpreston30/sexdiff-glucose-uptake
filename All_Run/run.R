@@ -10,4 +10,5 @@ source("R/Scripts/01_phenotypic_data.R")
 source("R/Scripts/02_physiologic_data.R")
 source("R/Scripts/03_glucose_uptake.R")
 source("R/Scripts/04_render_figures.R")
+source("R/Scripts/05_figure_legends.R")
 }
