@@ -9,7 +9,11 @@ if (!("renv" %in% loadedNamespaces())) {
 # Read packages from DESCRIPTION file
 desc <- read.dcf("DESCRIPTION")
 cran_packages <- trimws(strsplit(desc[, "Imports"], ",\\s*")[[1]])
-bioc_text <- desc[, "Bioconductor"]
+bioc_text <- if ("Bioconductor" %in% colnames(desc)) {
+  desc[, "Bioconductor"]
+} else {
+  NA
+}
 bioc_packages <- if (!is.na(bioc_text) && bioc_text != "") {
   trimws(strsplit(bioc_text, ",\\s*")[[1]])
 } else {

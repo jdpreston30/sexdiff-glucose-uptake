@@ -117,7 +117,7 @@ plot_IRT <- function(data, rmanova_result,
     annotation_custom(
       grob = grid::textGrob(
         label = sex_diet_text,
-        x = 0.619, y = 1.001,
+        x = 0.619, y = 1.011,
         hjust = 0, vjust = 1,
         gp = grid::gpar(fontsize = 8, fontfamily = "Arial", fontface = "plain")
       ),

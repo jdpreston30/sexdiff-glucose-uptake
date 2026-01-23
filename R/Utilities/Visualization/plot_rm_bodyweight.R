@@ -108,7 +108,7 @@ plot_rm_bodyweight <- function(data, lmm_result,
     annotation_custom(
       grob = grid::textGrob(
         label = p_text,
-        x = 0.971, y = 0.993,
+        x = 0.971, y = 1.011,
         hjust = 1, vjust = 1,
         gp = grid::gpar(fontsize = 8, fontfamily = "Arial", fontface = "plain")
       ),

@@ -1,7 +1,5 @@
 # Sex Differences in Glucose Uptake Analysis
 
-**Reproducible analysis pipeline for academic publication**
-
 ## 📖 Citation
 
 This code is associated with the analysis presented in the following manuscript:
@@ -13,59 +11,63 @@ This code is associated with the analysis presented in the following manuscript:
 
 ## 🚀 Quick Start for Reproduction
 
-### Option 1: Using Docker (Recommended for Full Reproducibility)
+### Option 1: Using Docker (Recommended for Exact Reproducibility)
 
-**Docker ensures identical R versions (4.5.1) and package installations across all systems.**
-
-#### Requirements
-- [Install Docker Desktop](https://www.docker.com/products/docker-desktop) (includes Docker and Docker Compose)
-  - For Mac with Apple Silicon (M1/M2/M3): Download the Apple Silicon version
-  - For Mac with Intel: Download the Intel version
-
-#### Running the Analysis
+**Status**: Placeholder - Docker image will be built upon manuscript acceptance
 
 ```bash
-# 1. Build the Docker image (first time only)
-docker-compose build
-
-# 2. Run the complete analysis
-docker-compose run analysis Rscript All_Run/run.R
+# Instructions will be added here
+# Expected workflow:
+# docker pull [username]/sexdiff-glucose-uptake:latest
+# docker run -v $(pwd):/analysis [username]/sexdiff-glucose-uptake:latest
 ```
 
-That's it! All results will be saved to the `Outputs/` directory.
+### Option 2: Manual Installation (Without Docker)
 
-### Option 2: Local Installation with renv
+**Prerequisites**: 
+- R >= 4.5.1
+- Git (to clone repository)
+- System dependencies:
+  - **macOS**: `brew install udunits libxml2`
+  - **Ubuntu/Debian**: `sudo apt-get install libudunits2-dev libxml2-dev`
+  - **RHEL/CentOS/Fedora**: `sudo yum install udunits2-devel libxml2-devel`
 
-**If you prefer running locally, this project uses renv for package management.**
-
-#### Requirements
-- R 4.5.1 or later
-- System dependencies (see Dockerfile for list)
-
-#### Setup
+**Note**: This project uses `renv` for package management to ensure reproducibility. The `renv.lock` file contains exact versions of all packages used in the manuscript.
 
 ```r
-# 1. Open R in the project directory
-# renv will automatically activate
+# 1. Clone the repository
+# (from terminal)
+git clone https://github.com/jdpreston30/sexdiff-glucose-uptake.git
+cd sexdiff-glucose-uptake
 
-# 2. Install all required packages
-source("setup_renv.R")
+# 2. Start R in the project directory
+# (renv automatically activates via .Rprofile)
 
-# 3. Run the analysis
+# 3. Restore all packages at exact versions (first time only, ~10-20 minutes)
+renv::restore()
+
+# 4. (Optional) Check system dependencies
+source("R/Utilities/Helpers/check_system_dependencies.R")
+check_system_dependencies()
+
+# 5. Run the complete analysis pipeline
 source("All_Run/run.R")
 ```
 
-The first-time setup will take 10-20 minutes to install all packages. After that, the environment is locked and reproducible via `renv.lock`.
+**What happens during `renv::restore()`**:
+- Installs all R packages at exact versions from `renv.lock`
+- Installs CRAN packages (e.g., ggplot2, dplyr, broom, tidyr, ggpattern)
+- Creates isolated project library (doesn't affect your system R packages)
+- Only needed once per computer; subsequent runs use installed packages
+- Packages are automatically loaded from `DESCRIPTION` file during pipeline execution
 
 ## 📁 Project Structure
 
 ```
-├── DESCRIPTION                    # Package dependencies (R standard)
+├── DESCRIPTION                    # Package dependencies
 ├── renv.lock                      # Package version lockfile (renv)
 ├── .Rprofile                      # R startup configuration (activates renv)
-├── setup_renv.R                   # One-time setup script for local installation
-├── Dockerfile                     # Docker container configuration
-├── docker-compose.yml             # Docker Compose setup
+├── Dockerfile                     # Docker container configuration (in progress)
 ├── All_Run/
 │   ├── config_dynamic.yaml        # Dynamic analysis configuration
 │   └── run.R                      # Main analysis execution script
@@ -77,7 +79,7 @@ The first-time setup will take 10-20 minutes to install all packages. After that
 │   │   ├── 01_phenotypic_data.R       # Phenotypic analysis
 │   │   ├── 02_physiologic_data.R      # Physiologic analysis
 │   │   ├── 03_glucose_uptake.R        # Glucose uptake analysis
-│   │   └── 99_render_figures.R        # Figure compilation
+│   │   └── 04_render_figures.R        # Figure compilation
 │   └── Utilities/
 │       ├── Helpers/                   # Helper functions
 │       ├── Analysis/                  # Statistical analysis utilities
@@ -90,14 +92,48 @@ The first-time setup will take 10-20 minutes to install all packages. After that
 
 ## 🔬 Analysis Workflow
 
-1. **Run complete analysis**: `source("All_Run/run.R")`
-2. **View results**: Check `Outputs/` directory
-3. **Individual components**: Source specific scripts from `R/Scripts/`
+The complete pipeline executes in sequence:
+
+1. **00a-00c**: Environment setup, configuration, data import
+2. **01**: Phenotypic data analysis
+3. **02**: Physiologic measurements
+4. **03**: Glucose uptake analysis (in vivo and ex vivo)
+5. **04**: Render publication figures
 
 ## 💻 System Requirements
 
-### Docker Option
-- **Docker Desktop** (required)
+### Computational Requirements
+- **R**: Version 4.5.1 or higher
+- **Platform**: Developed on macOS (Apple Silicon) but cross-platform compatible
+- **Memory**: Minimum 8 GB RAM recommended
+- **Storage**: ~500 MB for analysis outputs
+
+### System Dependencies
+- **udunits**: Unit conversion library (required for units and sf R packages)
+- **libxml2**: XML parsing library (required for xml2 R package)
+
+*Note: System dependencies will be automatically installed in the Docker container. For manual installation, see installation commands in Quick Start section.*
+
+## 📦 Package Dependencies
+
+All R package dependencies are specified in `DESCRIPTION` and locked at exact versions in `renv.lock`. Key packages include:
+
+- **Data manipulation**: dplyr, tidyr, purrr, readr, readxl
+- **Statistics**: emmeans, multcomp, lme4, car, ez, ARTool
+- **Visualization**: ggplot2, ggpattern, cowplot
+- **Reporting**: knitr, rmarkdown
+
+For complete list with versions, see `renv.lock`.
+
+## 📄 License
+
+This code is licensed under [MIT License](LICENSE). Data availability is subject to IRB and institutional policies.
+
+## 📧 Contact
+
+For questions about the analysis or code:
+- Joshua D. Preston: joshua.preston@emory.edu
+- ORCID: [0000-0001-9834-3017](https://orcid.org/0000-0001-9834-3017)
 - **Disk Space**: ~2GB for Docker image and outputs
 - **Memory**: 4GB RAM minimum (8GB recommended)
 
