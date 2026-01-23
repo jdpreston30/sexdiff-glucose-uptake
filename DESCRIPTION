@@ -41,10 +41,6 @@ Suggests:
     rlang,
     languageserver,
     httpgd
-Additional_repositories: 
-    https://bioconductor.org/packages/release/bioc
-Bioconductor:
-    multtest
 Config/renv/snapshot/type: explicit
 Encoding: UTF-8
 RoxygenNote: 7.3.3

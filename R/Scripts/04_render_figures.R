@@ -25,7 +25,7 @@ fig2 <- ggdraw(xlim = c(0, 8.5), ylim = c(0, 11)) +
   draw_plot(p2a, x = 0.668, y = 7.2525, width = 3.5, height = 2.7) +
   draw_plot(p2b, x = 4.32, y = 7.2525, width = 3.5, height = 2.7) +
   draw_plot(p2c, x = 0.668, y = 4.2275, width = 3.5, height = 2.7) +
-  draw_plot(p2d, x = 4.32+.14, y = 4.2275, width = 3.361, height = 2.7) +
+  draw_plot(p2d, x = 4.46, y = 4.2275, width = 3.361, height = 2.7) +
   draw_plot(p2e, x = 0.668, y = 1.5025, width = 3.5, height = 2.4) +
   # Labels
   figure_labels(list(
@@ -83,17 +83,44 @@ fig2_tiff <- tiff::readTIFF("Outputs/Figures/Fig2.tiff", native = FALSE)
 fig3_tiff <- tiff::readTIFF("Outputs/Figures/Fig3.tiff", native = FALSE)
 fig4_tiff <- tiff::readTIFF("Outputs/Figures/Fig4.tiff", native = FALSE)
 #- 4.6.2: Create PDF with all figures (one per page, no downsizing)
-pdf("Outputs/Figures/Figs1-4.pdf", width = 8.5, height = 11)
-# Figure 1
-grid::grid.newpage()
-grid::grid.raster(fig1_tiff, interpolate = TRUE)
-# Figure 2
-grid::grid.newpage()
-grid::grid.raster(fig2_tiff, interpolate = TRUE)
-# Figure 3
-grid::grid.newpage()
-grid::grid.raster(fig3_tiff, interpolate = TRUE)
-# Figure 4
-grid::grid.newpage()
-grid::grid.raster(fig4_tiff, interpolate = TRUE)
-dev.off()
+# Close any open graphics devices first
+while (dev.cur() > 1) {
+  try(dev.off(), silent = TRUE)
+}
+
+# Create PDF with error handling
+tryCatch({
+  pdf_file <- "Outputs/Figures/Figs1-4.pdf"
+  
+  # Remove existing PDF if present (prevents write conflicts)
+  if (file.exists(pdf_file)) file.remove(pdf_file)
+  
+  # Open PDF device
+  pdf(pdf_file, width = 8.5, height = 11)
+  
+  # Figure 1
+  grid::grid.newpage()
+  grid::grid.raster(fig1_tiff, interpolate = TRUE)
+  
+  # Figure 2
+  grid::grid.newpage()
+  grid::grid.raster(fig2_tiff, interpolate = TRUE)
+  
+  # Figure 3
+  grid::grid.newpage()
+  grid::grid.raster(fig3_tiff, interpolate = TRUE)
+  
+  # Figure 4
+  grid::grid.newpage()
+  grid::grid.raster(fig4_tiff, interpolate = TRUE)
+  
+  # Close device safely
+  dev.off()
+  
+  cat("✅ Combined PDF created: Outputs/Figures/Figs1-4.pdf\n")
+}, error = function(e) {
+  # Make sure device is closed even if error occurs
+  try(dev.off(), silent = TRUE)
+  cat("⚠️  Error creating combined PDF:", e$message, "\n")
+  cat("   Individual TIFF files are still available in Outputs/Figures/\n")
+})
