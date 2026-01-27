@@ -19,6 +19,20 @@ BW_LMM <- run_lmm(
   between_factors = c("sex", "diet"),
   random_slope = TRUE # includes random slope for time
 )
+#- 1.1.3: Calculate percent weight gain by group
+BW_percent_gain <- BW %>%
+  filter(time %in% c(0, 8)) %>%
+  pivot_wider(names_from = time, values_from = BW, names_prefix = "week_") %>%
+  mutate(
+    percent_gain = ((week_8 - week_0) / week_0) * 100
+  ) %>%
+  group_by(sex, diet) %>%
+  summarise(
+    mean_percent_gain = mean(percent_gain, na.rm = TRUE),
+    sd_percent_gain = sd(percent_gain, na.rm = TRUE),
+    n = n(),
+    .groups = "drop"
+  )
 #+ 1.2: Food Efficiency, LM, FM ANOVA
 #- 1.2.1: Food Efficiency ANOVA
 FE_ANOVA <- run_anova(data = phenotypic_physiologic, response = "food_efficiency")

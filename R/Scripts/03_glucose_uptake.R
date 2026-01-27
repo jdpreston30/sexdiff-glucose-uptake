@@ -22,7 +22,7 @@ GU_heart_ANOVA <- run_anova(data = glucose_uptake, response = "GU_heart")
 # (Multiple explants from same animal are correlated)
 ex_vivo_long <- ex_vivo_glucose_uptake %>%
   mutate(animal_ID = str_remove(ID, "_Ex"))
-# Run mixed model ANOVA with automatic diagnostics and post-hoc tests
+#- 3.2.2: Run mixed model ANOVA
 GU_ex_vivo_ANOVA <- run_mixed_anova(
   data = ex_vivo_long,
   response = "GU_EV_gonadal",
@@ -33,6 +33,7 @@ GU_ex_vivo_ANOVA <- run_mixed_anova(
   check_diagnostics = TRUE,
   posthoc_adjust = "tukey"
 )
+
 #+ 3.3: Subset GU data
 #- 3.3.1: WAT
 glucose_uptake_WAT <- glucose_uptake %>%
