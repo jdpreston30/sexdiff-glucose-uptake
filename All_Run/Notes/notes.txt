@@ -1,8 +1,29 @@
-In the text we state "Two mice in the in vivo experiment (one HFD-fed male and one HFD-fed female) did not respond normally to glucose bolus and were excluded entirely from glucose uptake and glucose tolerance analysis." To show what we are specifically referring to, I have included screenshots of the two pages from the lab notebook which shows the datapoints for these mice (these mice do not have values listed for glucose uptake or glucose tolerance in the clean_compiled_data.xlsx). 
+In the text we state that two mice responded abnormally and were remove from glucose tolerance and uptake analysis. To show what we are specifically referring to, I have included screenshots of the two pages from the lab notebook which shows the datapoints for these mice (these mice do not have values listed for glucose uptake or glucose tolerance in the clean_compiled_data.xlsx). 
+
+This is the population means from the OGTT without them:
+  time  sex   diet      n  mean    sd    se
+   <fct> <fct> <fct> <int> <dbl> <dbl> <dbl>
+ 1 0     F     HF       11 109.   18.8  5.68
+ 2 15    F     HF       11 247.   38.9 11.7 
+ 3 30    F     HF       11 218.   34.2 10.3 
+ 4 45    F     HF       11 181.   13.2  3.99
+ 5 0     F     LF       12  84.4  17.4  5.03
+ 6 15    F     LF       12 186.   38.1 11.0 
+ 7 30    F     LF       12 138.   39.2 11.3 
+ 8 45    F     LF       12 136.   28.2  8.13
+ 9 0     M     HF       11 147.   23.8  7.19
+10 15    M     HF       11 286.   45.2 13.6 
+11 30    M     HF       11 256.   37.6 11.3 
+12 45    M     HF       11 240.   32.6  9.83
+13 0     M     LF       12  95.2  17.5  5.06
+14 15    M     LF       12 181.   51.9 15.0 
+15 30    M     LF       12 163.   45.8 13.2 
+16 45    M     LF       12 144.   41.1 11.9 
+
 
 MHF4 went from 0, 15, 30, 45 minute values of 271, 355, 123, 163 indicating some baseline hyperglycemia with a spike to 355 after bolus but then a massive drop to 123 at 30 minutes but then a raising to 163 at 45 minute. This abnormal pattern we felt justified removal from analysis as this was not a normal response.
 
 FHF68 went from 0, 15, 30, 45 minute values of 146, 175, 139, 101 indicating some baseline hyperglycemia but with minimal spike to only 175 then normalization below baseline levels, perhaps indicating it did not fully recieve bolus. This abnormal pattern we felt justified remaval from analysis as this was not a normal response. Other spikes after bolus at 15 minutes were in the 225-296 for its other three cagemates with 30 minute values in the 170s-250 range and 45 in the 170-180s range.
 
 Thus, in the text, we are qualifying this as follows:
-"Two HFD-fed mice (one male, one female) in the in vivo experiment were excluded from glucose uptake and glucose tolerance analyses due to atypical responses to glucose bolus. The male exhibited marked baseline hyperglycemia with a minimal post-bolus increase followed by near-normalization, and the female showed mild baseline hyperglycemia with a minimal bolus response and subsequent near-normoglycemic levels. These atypical responses were perhaps indicative of incomplete bolus ingestion; regardless, we excluded these mice from glucose tolerance and uptake analysis given their major deviation from comparable experimental groups."
+"Two HFD-fed mice (one male, one female) in the in vivo experiment were excluded from glucose uptake and glucose tolerance analyses due to atypical responses to glucose bolus. The male exhibited extreme baseline hyperglycemia, followed by an erratic post-bolus trajectory (an initial spike, then a drop to well below group means), and the female showed mild baseline hyperglycemia with a markedly blunted bolus response across all time points. These atypical patterns were perhaps indicative of incomplete bolus ingestion; regardless, we excluded these mice from glucose tolerance and uptake analysis, given their major deviation from comparable experimental groups."

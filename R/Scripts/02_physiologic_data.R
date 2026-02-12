@@ -18,6 +18,8 @@ OGTT_RMANOVA <- run_rm_anova(
   value_col = "OGTT_BG",
   between_factors = c("sex", "diet")
 )
+#- 2.1.3: Print descriptives in ordered fashion
+print(OGTT_RMANOVA$descriptives |> arrange(sex, diet, time))
 # + 2.2: Insulin Response Test RM ANOVA
 #- 2.2.1: Reformat data to long format for ANOVA
 IRT <- phenotypic_physiologic |>

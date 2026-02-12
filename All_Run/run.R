@@ -1,4 +1,3 @@
-{
 source("R/Utilities/Helpers/restore_renv.R")
 # Load configuration
 source("R/Utilities/Helpers/load_dynamic_config.R")
@@ -11,4 +10,3 @@ source("R/Scripts/02_physiologic_data.R")
 source("R/Scripts/03_glucose_uptake.R")
 source("R/Scripts/04_render_figures.R")
 source("R/Scripts/05_figure_legends.R")
-}
